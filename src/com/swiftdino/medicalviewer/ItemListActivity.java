@@ -24,7 +24,6 @@ public class ItemListActivity extends FragmentActivity
         }
     }
 
-    @Override
     public void onItemSelected(String id) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
