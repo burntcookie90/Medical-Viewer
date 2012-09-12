@@ -27,7 +27,7 @@ public final class R {
         public static final int activity_info_display_fragment=0x7f030001;
         public static final int activity_item_detail=0x7f030002;
         public static final int activity_item_list=0x7f030003;
-        public static final int activity_item_twopane=0x7f030004;
+        public static final int activity_twopane=0x7f030004;
         public static final int fragment_item_detail=0x7f030005;
     }
     public static final class menu {
