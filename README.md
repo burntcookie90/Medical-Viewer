@@ -1,3 +1,0 @@
-Medical-Viewer
-==============
-test
