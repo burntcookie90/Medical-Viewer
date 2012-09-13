@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package com.swiftdino.medicalviewer;
 
 import android.content.Intent;
@@ -92,4 +92,3 @@ public class ItemListActivity extends FragmentActivity implements ItemListFragme
     }
     
 }
->>>>>>> 36a540ea1ed1d3d5d89ea6545968f3046e2a9339
