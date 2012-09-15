@@ -10,7 +10,6 @@ import android.util.Log;
 public class MasterListActivity extends FragmentActivity implements MasterListFragment.OnListItemSelectedListener {
 
 	final String TAG = "MasterListActivity";
-    private boolean mTwoPane;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
