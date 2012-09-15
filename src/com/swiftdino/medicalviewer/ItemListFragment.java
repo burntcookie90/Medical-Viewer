@@ -23,7 +23,6 @@ public class ItemListFragment extends ListFragment {
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks() {
-        
         public void onItemSelected(String id) {
         }
     };
