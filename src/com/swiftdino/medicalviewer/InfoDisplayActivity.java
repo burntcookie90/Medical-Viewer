@@ -11,7 +11,7 @@ public class InfoDisplayActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info_display);
+     //   setContentView(R.layout.activity_info_display);
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -21,9 +21,9 @@ public class InfoDisplayActivity extends FragmentActivity {
 //                    getIntent().getStringExtra(InfoDisplayFragment.ARG_ITEM_ID));
             InfoDisplayFragment fragment = new InfoDisplayFragment();
             //fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.info_display_container, fragment)
-                    .commit();
+      //      getSupportFragmentManager().beginTransaction()
+        ///            .add(R.id.info_display_container, fragment)
+           //         .commit();
         }
         
     }

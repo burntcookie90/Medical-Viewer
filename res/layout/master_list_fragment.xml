@@ -1,0 +1,21 @@
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name="com.swiftdino.medicalviewer.MasterListFragment"
+    android:id="@+id/fragment_masterlist"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    tools:context=".ItemListActivity" />
+
+    
+<!--
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_masterlist"
+    android:name="com.motherrobot.sample.fragment.MasterListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+</fragment>
+  -->
