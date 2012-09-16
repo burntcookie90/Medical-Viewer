@@ -13,6 +13,9 @@ final String TAG = "DetailViewActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        
         Log.d(TAG, "Setting Content View");
         setContentView(R.layout.detail_view_fragment);
 
