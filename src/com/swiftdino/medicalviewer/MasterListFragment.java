@@ -2,6 +2,8 @@ package com.swiftdino.medicalviewer;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ public class MasterListFragment extends ListFragment {
 	     
 	    listItemSelectedListener = (OnListItemSelectedListener) getActivity();
 	}
+
 
 	
 	@Override

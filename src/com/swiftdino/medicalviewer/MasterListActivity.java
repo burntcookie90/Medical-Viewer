@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 public class MasterListActivity extends FragmentActivity implements MasterListFragment.OnListItemSelectedListener {
 
@@ -27,7 +29,13 @@ public class MasterListActivity extends FragmentActivity implements MasterListFr
         
     }
 
-
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.master_list_menu, menu);
+	    return true;
+	}
+    
 public void onListItemSelected(String id) {
 		
 		// Load the Fragment in an activity if its not present,
