@@ -5,13 +5,10 @@
     android:layout_width="fill_parent"
     android:gravity="center"
     >
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="?android:attr/textAppearanceLarge"
-    android:id="@+id/detail_textview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"/>
+
+    <com.swiftdino.medicalviewer.DisplayPanel
+        android:id="@+id/displayPanel1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -28,8 +28,13 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	private ArrayList<GraphicObject> _graphics = new ArrayList<GraphicObject>();
 	private ArrayList<Point> _plotPoints = new ArrayList<Point>(10); 
 	
+	//input data points
+	Iterable<Point> _points = null;
+	
 	//offset for frame panning
 	private Point _frameOffset = new Point();
+	private boolean pannable = true;
+	private int panTimer = 0;
 	private float _zoomValue = 1;
 	
 	//graph point size
@@ -44,8 +49,11 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	//temporary points for drag tracking
 	private int lastX = 0;
 	private int lastY = 0;
+	
+	// historical pointer difference for pinch zoom
 	private int pointDiff; 
 	
+	// distance from edge of panel to graph axis
 	private int _uiBuffer = 60;
 	
 	public DisplayPanel(Context context) {
@@ -57,7 +65,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
         setFocusable(true);
         
         //use dummy points
-        addpoints();
+        addTestPoints();
         
     }
 	
@@ -70,7 +78,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
         setFocusable(true);
         
         //use dummy points
-        addpoints();
+        addTestPoints();
 		
 	}
 	
@@ -83,13 +91,18 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
         setFocusable(true);
         
         //use dummy points
-        addpoints();
+        addTestPoints();
         
 	}
 	
-	public void setZoom(int zoom){
+	public void setZoom(float zoom){
 		_zoomValue = zoom;
 	}
+	
+	public void setData(Iterable<Point> data){
+		_points = data;
+	}
+
 	
 	public int distance(float x1, float y1, float x2, float y2){
 		return (int)Math.sqrt(Math.pow(x2- x1, 2) + Math.pow(y2-y1, 2));
@@ -123,21 +136,37 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 					
 				case DEBUG_PLOT_POINTS:
 					
-//					if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
-//						lastX = (int)event.getX();
-//						lastY = (int)event.getY();
-//					}
-					
-					if(event.getPointerCount() == 2 && event.getAction() != MotionEvent.ACTION_MOVE){
-						pointDiff = distance(event.getX(), event.getY(), event.getX(1), event.getY(1));
-						Log.d("","differnece = " + pointDiff);
+					// let the graph pan again
+					if(panTimer == 0){
+						pannable = true;
 					}
 					
-					if(event.getAction() == MotionEvent.ACTION_MOVE) { // && event.getPointerCount() < 2){
-						if(event.getPointerCount() < 2){
+					// panning disabled for 1 less frame
+					if(!pannable){
+						panTimer -= 1;
+					}
+					
+					// set panning false for 1 frame after pinch to let the pointer locations update
+					if(event.getActionMasked() == MotionEvent.ACTION_POINTER_UP){
+						pannable = false;
+						panTimer = 1;
+					}
+					
+					// get the diff between the pointer locations
+					if(event.getPointerCount() == 2 && event.getAction() != MotionEvent.ACTION_MOVE){
+						pointDiff = distance(event.getX(), event.getY(), event.getX(1), event.getY(1));
+						//Log.d("","difference = " + pointDiff);
+					}
+					
+					// when a pointer has moved (any pointer)
+					if(event.getAction() == MotionEvent.ACTION_MOVE) {
+						
+						// if one pointer and panning is enabled then pan
+						if(event.getPointerCount() < 2 && pannable){
 							_frameOffset.offset((int)event.getX() - lastX, (int)event.getY() - lastY);
 						}
 						
+						// if two pointers then change zoom proportional to pointer difference  / pointer difference form the previous frame
 						else if(event.getPointerCount() == 2){
 							int newPD = distance(event.getX(), event.getY(), event.getX(1), event.getY(1));
 							_zoomValue *= (float)newPD/(float)pointDiff;
@@ -145,8 +174,11 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 						}
 					}
 					
-					lastX = (int) event.getX();
-					lastY = (int) event.getY();
+					// keep track of the last frames pointer locations for panning
+					if(event.getPointerCount() < 2){
+						lastX = (int) event.getX();
+						lastY = (int) event.getY();
+					}
 					
 					break;
 			
@@ -187,6 +219,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 					
 					Point last = null;
 					
+					// distances between axis marks
 					int wInterval = (getWidth() - _uiBuffer * 2)/10;
 					int hInterval = (getHeight() - _uiBuffer * 2)/10;
 					
@@ -203,20 +236,33 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 						canvas.drawText(label,_uiBuffer/2 - (3 * label.length()), getHeight() - _uiBuffer - (hInterval * i) + 3, paint);
 					}
 					
+					Iterable<Point> pointData;
+					if(_points == null){
+						pointData = _plotPoints;
+					}
+					else{
+						pointData =  _points;
+					}
+					
+					
 					//plot the stored point and lines between them
 					paint.setAlpha(120);
-					for (Point p : _plotPoints){
+					for (Point p : pointData){
 						
-						if(showPoints){
-							canvas.drawCircle((p.x * _zoomValue) - _pointSize/2 + _frameOffset.x, (-p.y * _zoomValue) - _pointSize/2 + _frameOffset.y, _pointSize, paint);
+						if(p != null){
+							
+							if(showPoints){
+								canvas.drawCircle((p.x * _zoomValue) - _pointSize/2 + _frameOffset.x, (-p.y * _zoomValue) - _pointSize/2 + _frameOffset.y, _pointSize, paint);
+							}
+							
+							if(last != null) {
+								canvas.drawLine((last.x * _zoomValue) + _frameOffset.x, (-last.y * _zoomValue) + _frameOffset.y, (p.x * _zoomValue) + _frameOffset.x, (-p.y * _zoomValue) + _frameOffset.y, paint);
+							}
+							
+							last = p;
+						
 						}
 						
-						if(last != null) {
-							canvas.drawLine((last.x * _zoomValue) + _frameOffset.x, (-last.y * _zoomValue) + _frameOffset.y, (p.x * _zoomValue) + _frameOffset.x, (-p.y * _zoomValue) + _frameOffset.y, paint);
-						}
-						
-						last = p;
-					
 					}
 					
 					break;
@@ -234,10 +280,18 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		_thread.setRunning(true);
-	    _thread.start();
-	    _frameOffset.set(0 + _uiBuffer,getHeight() - _uiBuffer);
-	    
+		try{
+			_thread.setRunning(true);
+	    	_thread.start();
+	    	_frameOffset.set(0 + _uiBuffer,getHeight() - _uiBuffer);
+		} catch(IllegalThreadStateException e){
+			_thread = new CanvasThread(getHolder(), this);
+			_thread.setRunning(true);
+			_thread.start();
+		}
+    	
+		_frameOffset.set(0 + _uiBuffer,getHeight() - _uiBuffer);
+
 	    Log.d("","Surface Created");
 	    
 	}
@@ -310,7 +364,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	}
 	
 	//dummy points for testing
-	private void addpoints(){
+	private void addTestPoints(){
 		
 		ArrayList<Point> list = _plotPoints;
 		
@@ -324,6 +378,11 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 		list.add(new Point(700, 250));
 		list.add(new Point(800, 375));
 		list.add(new Point(900, 85));
+		
+//		_points = new ArrayList<Point>();
+//        for(int i = 0; i < 10; i++){
+//        	((ArrayList<Point>)_points).add(new Point(i*100,i*50));
+//        }
 		
 	}
 	

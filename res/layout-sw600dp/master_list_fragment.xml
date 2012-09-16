@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
+
     <fragment
-        android:name="com.swiftdino.medicalviewer.MasterListFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:id="@+id/fragment_masterlist"
-        android:layout_weight="40">
+        android:name="com.swiftdino.medicalviewer.MasterListFragment"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="30" >
+
     </fragment>
+
     <fragment
-        android:name="com.swiftdino.medicalviewer.DetailViewFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/fragment_detailview"
-        android:layout_weight="60">
+        android:name="com.swiftdino.medicalviewer.DetailViewFragment"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="70" >
+
     </fragment>
 </LinearLayout>

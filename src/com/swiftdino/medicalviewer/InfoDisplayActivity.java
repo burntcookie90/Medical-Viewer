@@ -16,14 +16,14 @@ public class InfoDisplayActivity extends FragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
-            //Bundle arguments = new Bundle();
+//            Bundle arguments = new Bundle();
 //            arguments.putString(InfoDisplayFragment.ARG_ITEM_ID,
 //                    getIntent().getStringExtra(InfoDisplayFragment.ARG_ITEM_ID));
-            InfoDisplayFragment fragment = new InfoDisplayFragment();
-            //fragment.setArguments(arguments);
-      //      getSupportFragmentManager().beginTransaction()
-        ///            .add(R.id.info_display_container, fragment)
-           //         .commit();
+//            InfoDisplayFragment fragment = new InfoDisplayFragment();
+//            fragment.setArguments(arguments);
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.info_display_container, fragment)
+//                    .commit();
         }
         
     }

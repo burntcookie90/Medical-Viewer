@@ -1,8 +1,5 @@
 package com.swiftdino.medicalviewer;
 
-import com.swiftdino.medicalviewer.dummy.DummyContent;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
