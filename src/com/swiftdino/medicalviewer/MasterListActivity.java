@@ -1,7 +1,5 @@
 package com.swiftdino.medicalviewer;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
 
-public class MasterListActivity extends FragmentActivity implements
-		MasterListFragment.OnListItemSelectedListener {
+public class MasterListActivity extends FragmentActivity {// implements
+	// MasterListFragment.OnListItemSelectedListener {
 
 	final String TAG = "MasterListActivity";
 
@@ -32,21 +30,22 @@ public class MasterListActivity extends FragmentActivity implements
 
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
+	/*public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.master_list_menu, menu);
 
 		Log.d(TAG, "1");
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(
-				R.id.patient_list_search).getActionView();
-		searchView.setSearchableInfo(searchManager
-				.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(true); // Do not iconify the widget;
-												// expand it by default
+		// SearchManager searchManager = (SearchManager)
+		// getSystemService(Context.SEARCH_SERVICE);
+		// SearchView searchView = (SearchView) menu.findItem(
+		// R.id.patient_list_search).getActionView();
+		// searchView.setSearchableInfo(searchManager
+		// .getSearchableInfo(getComponentName()));
+		// searchView.setIconifiedByDefault(true); // Do not iconify the widget;
+		// expand it by default
 
 		return true;
-	}
+	}*/
 
 	public void onListItemSelected(String id) {
 
