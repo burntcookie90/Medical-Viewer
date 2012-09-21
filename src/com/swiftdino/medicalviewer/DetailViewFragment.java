@@ -24,8 +24,7 @@ public class DetailViewFragment extends Fragment {
     
     }
     
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	Log.d(TAG, "Creating view from detail_view_content. Finding TextView.");
         View view = (View) inflater.inflate(R.layout.detail_view_content, container, true); 
         
