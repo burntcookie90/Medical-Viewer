@@ -28,8 +28,9 @@ public class MasterListFragment extends ListFragment {
 	// private OnListItemSelectedListener listItemSelectedListener;
 	private StringLoader loader = null;
 	private StringAdapter adapter = null;
-	private List<String> patientData = new ArrayList<String>(); // patient data
-	private List<String> listData = new ArrayList<String>(); // list data.
+	private List<Patient> patientData = new ArrayList<Patient>(); // patient
+																	// data
+	private List<Patient> listData = new ArrayList<Patient>(); // list data.
 																// updates
 																// depending on
 																// search
@@ -107,6 +108,10 @@ public class MasterListFragment extends ListFragment {
 		return;
 	}// met
 
+	/*
+	 * ############ FILTERING ITEMS IN SEARCH [start]############# also includes
+	 * code to add items
+	 */
 	private void showFilteredItems(String query) {
 		this.query = query;
 		loader.onContentChanged();
@@ -114,44 +119,44 @@ public class MasterListFragment extends ListFragment {
 
 	private void createListData() {
 		for (int i = 0; i < 100; i++) {
-			listData.add("Patient " + i);
-			patientData.add("Patient " + i);
+			listData.add(new Patient("Patient " + i));
+			patientData.add(new Patient("Patient " + i));
 		}
 	}
 
-	public List<String> getData() {
-		List<String> listFilteredData = new ArrayList<String>();
-		for (String string : patientData) {
+	public List<Patient> getData() {
+		List<Patient> listFilteredData = new ArrayList<Patient>();
+		for (Patient string : patientData) {
 			// Log.d(TAG, string);
-			if (query == null || string.contains(query)) {
+			if (query == null || string.getName().contains(query)) {
 				listFilteredData.add(string);
 			}
 		}
 		return listFilteredData;
 	}// met
 
-	private class LoaderCallBacks implements LoaderCallbacks<List<String>> {
+	private class LoaderCallBacks implements LoaderCallbacks<List<Patient>> {
 
-		public void onLoadFinished(Loader<List<String>> loader,
-				List<String> listData) {
+		public void onLoadFinished(Loader<List<Patient>> loader,
+				List<Patient> listData) {
 			adapter.setListData(listData);
 		}// met
 
-		public void onLoaderReset(Loader<List<String>> listData) {
-			adapter.setListData(new ArrayList<String>());
+		public void onLoaderReset(Loader<List<Patient>> listData) {
+			adapter.setListData(new ArrayList<Patient>());
 		}// met
 
-		public Loader<List<String>> onCreateLoader(int arg0, Bundle arg1) {
+		public Loader<List<Patient>> onCreateLoader(int arg0, Bundle arg1) {
 			return loader;
 		}// met
 	}// class
 
-	private class StringAdapter extends ArrayAdapter<String> {
+	private class StringAdapter extends ArrayAdapter<Patient> {
 
-		private List<String> listDataToDisplay = new ArrayList<String>();
+		private List<Patient> listDataToDisplay = new ArrayList<Patient>();
 		private LayoutInflater mInflater;
 
-		public StringAdapter(List<String> listData) {
+		public StringAdapter(List<Patient> listData) {
 			super(getActivity(), android.R.layout.simple_list_item_1,
 					android.R.id.text1, listData);
 			listDataToDisplay = listData;
@@ -159,7 +164,7 @@ public class MasterListFragment extends ListFragment {
 					Context.LAYOUT_INFLATER_SERVICE);
 		}// cons
 
-		private void setListData(List<String> newListData) {
+		private void setListData(List<Patient> newListData) {
 			this.listDataToDisplay.clear();
 			this.listDataToDisplay.addAll(newListData);
 			notifyDataSetChanged();
@@ -180,14 +185,14 @@ public class MasterListFragment extends ListFragment {
 			}
 
 			((TextView) view.findViewById(android.R.id.text1))
-					.setText(listDataToDisplay.get(position));
+					.setText(listDataToDisplay.get(position).getName());
 
 			return view;
 		}
 	}// inner class
 }// class
 
-class StringLoader extends AsyncTaskLoader<List<String>> {
+class StringLoader extends AsyncTaskLoader<List<Patient>> {
 
 	MasterListFragment fragment = null;
 
@@ -197,10 +202,14 @@ class StringLoader extends AsyncTaskLoader<List<String>> {
 	}// cons
 
 	@Override
-	public List<String> loadInBackground() {
+	public List<Patient> loadInBackground() {
 		return fragment.getData();
 	}// met
 }// class
+
+/*
+ * ############ FILTERING ITEMS IN SEARCH [finish]#############
+ */
 
 /*
  * @SuppressWarnings("unchecked")
