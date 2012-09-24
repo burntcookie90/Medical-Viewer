@@ -47,7 +47,8 @@ public class DetailViewFragment extends Fragment {
 	    	
 	    	// sets zoom value of graph to a random value between .5 and 2.0
 	    	float zoom = (rand.nextInt(20) + 5.0f) / 10.0f;
-	    	display.setZoom(zoom);
+	    	//display.setZoom(zoom);
+	    	display.changeActiveSets();
 	    }
 	    else
 	    {

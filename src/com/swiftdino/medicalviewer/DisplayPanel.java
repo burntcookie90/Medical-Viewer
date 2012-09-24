@@ -1,6 +1,12 @@
 package com.swiftdino.medicalviewer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,20 +40,21 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	
 	//test lists for drawn objects
 	private ArrayList<GraphicObject> _graphics = new ArrayList<GraphicObject>();
-	private ArrayList<Point> _plotPoints = new ArrayList<Point>(10);
+	private ArrayList<PointF> _plotPoints = new ArrayList<PointF>(10);
 	
 	//Data input from queries
 	private DataSet[] _data = new DataSet[5];
 	private int _activeSets = 0;
 	
 	//input data points
-	Iterable<Point> _points = null;
+	Iterable<PointF> _points = null;
 	
 	//offset for frame panning
 	private Point _frameOffset = new Point();
 	private boolean pannable = true;
 	private int panTimer = 0;
-	private float _zoomValue = 1;
+	private float _defaultZoom = 1000;
+	private float _zoomValue = _defaultZoom;
 	
 	//double tap time holder and threshold
 	private long _lastRelease = 0;
@@ -114,7 +122,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 		_zoomValue = zoom;
 	}
 	
-	public void setTestData(Iterable<Point> data){
+	public void setTestData(Iterable<PointF> data){
 		_points = data;
 	}
 
@@ -142,9 +150,108 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 		return ((int)(num * (float)Math.pow(10, acc))) / ((float)Math.pow(10, acc));
 	}
 	
+	private DataSet[] csv2DataSets() throws Exception{
+		
+		InputStream _csvRaw = getContext().getAssets().open("samples.csv");
+		BufferedReader csv = new BufferedReader(new InputStreamReader(_csvRaw));
+		
+		String line = csv.readLine();
+		String[] v = line.split(",");
+		
+		int sets = v.length - 1;
+		
+		DataSet[] _dataSets = new DataSet[sets];
+		Object[] pts = new Object[sets];
+		for(int i = 0; i < sets; i++){
+			pts[i] = new ArrayList<PointF>();
+		}
+		
+		String[] names = new String[sets];
+		for(int i = 1; i < sets+1; i++){
+			names[i-1] = v[i].replaceAll("'", "");
+		}
+		
+		line = csv.readLine();
+		v = line.split(",");
+		
+		String[] units = new String[sets];//(line.split(",")[1]).replace("'", "");
+		
+		for(int i = 1; i < sets+1; i++){
+			units[i-1] = v[i].replaceAll("'", "");
+		}
+				
+		line = csv.readLine();
+		
+		while(line != null){
+			
+			//Log.d("", "A");
+			
+			String[] values = line.split(",");
+			
+			values[0] = values[0].replaceAll("'", "");
+			values[0] = values[0].replaceAll("\\[", "");
+			values[0] = values[0].replaceAll("\\]", "");
+			float time = 0, mult = 360;
+			for(String s : values[0].split(":")){
+				time += (new Float(s))*mult;
+				mult /= 60;
+			}
+			
+			time -= 3600;
+			
+			//Log.d("","B");
+			
+			for(int i = 0; i < sets; i++){
+				ArrayList<PointF> current = (ArrayList<PointF>)pts[i];
+				current.add(new PointF(time,(float)(new Float(values[i+1]))));
+			}
+			
+			line = csv.readLine();
+		}
+		
+		for(int i = 0; i < sets; i++){
+			_dataSets[i] = new DataSet(names[i], units[i], (ArrayList<PointF>)pts[i]);
+		}
+		
+		return _dataSets;	
+	}
+
+	private int bFind(ArrayList<PointF> data, float key, int beg, int end){
+		
+		if(end < beg) return -1;
+		
+		else{
+			
+			int mid = (beg + end)/2;
+			
+			if(data.get(mid).x > key){
+				return bFind(data,key,beg,mid-1);
+			}
+			
+			else if(data.get(mid).x < key){
+				return bFind(data,key,mid+1,end);
+			}
+			
+			else return mid;
+			
+		}
+	
+	}
+	
 	private void resetView(){
 		_frameOffset.set(0,0);
-		_zoomValue = 1;
+		_zoomValue = _defaultZoom;
+	}
+	
+	public void changeActiveSets(){
+		switch(_activeSets){
+			case 1:
+				_activeSets = 2;
+				break;
+			case 2:
+				_activeSets = 1;
+				break;
+		}
 	}
 	
 	//when a touch event occurs
@@ -326,7 +433,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 					
 					//Log.d("" + getHeight(),"" + ((getHeight() - (_uiBuffer * (3 + 1))) / 3));
 					
-					Point last = null;
+					PointF last = null;
 					
 					// distances between axis marks
 					int wInterval = (getWidth() - _uiBuffer * 2)/10;
@@ -345,7 +452,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 						canvas.drawText(label,_uiBuffer/2 - (3 * label.length()), getHeight() - _uiBuffer - (hInterval * i) + 3, paint);
 					}
 					
-					Iterable<Point> pointData;
+					Iterable<PointF> pointData;
 					if(_points == null){
 						pointData = _plotPoints;
 					}
@@ -357,7 +464,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 					paint.setAlpha(255);
 					paint.setColor(Color.BLUE);
 					paint.setStrokeWidth(3);
-					for (Point p : pointData){
+					for (PointF p : pointData){
 						
 						if(p != null){
 							
@@ -380,27 +487,55 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 				case PLOT_DATA:
 					
 					if(_activeSets > 0){
-					
+						
+						float textSize = paint.getTextSize();
+						
 						int _buffer = _uiBuffer;
 						float _graphSize = (getHeight() - (_buffer * (_activeSets + 1f))) / _activeSets;
+						float _graphWidth = (getWidth() - (_uiBuffer * 4));
 						
 						// distances between axis marks
 						float widthInterval = (getWidth() - _uiBuffer * 4)/10f;
-						float heightInterval = _graphSize/2f;
+						float heightInterval = _graphSize/4f;
 						
-						Point lastP = null;
+						ArrayList<PointF> avgLoc = new ArrayList<PointF>();
+						ArrayList<String> avgS = new ArrayList<String>();
+						ArrayList<Integer> avgC = new ArrayList<Integer>();
+						
+						PointF lastP = null;
 						
 						for(int i = 0; i < _activeSets; i++){
 							//plot the stored point and lines between them
 							paint.setAlpha(255);
 							paint.setColor(_colors[i%_colors.length]);
-							paint.setStrokeWidth(3);
-							for (Point p : _data[i].getData()){
+							paint.setStrokeWidth(2);
+							
+							float total = 0;
+							float divider = 0;
+							
+							float start = -_frameOffset.x / _zoomValue;
+							float finish = (_graphWidth - _frameOffset.x) / _zoomValue;
+							
+							int beg = Math.max(bFind((ArrayList<PointF>)_data[i].getData(),start,0,((ArrayList<PointF>)_data[i].getData()).size()-1),0);
+							int end = bFind((ArrayList<PointF>)_data[i].getData(),finish,0,((ArrayList<PointF>)_data[i].getData()).size()-1);
+							
+							//Log.d("", beg + " To: " + end);
+							
+							ArrayList<PointF> currentData = (ArrayList<PointF>)_data[i].getData();
+							if(end == -1) end = currentData.size()-1;
+							
+							for(int j = beg; j < end + 1; j++){
+							//for (PointF p : _data[i].getData()){
+								
+								PointF p = currentData.get(j);
 								
 								if(p != null){
 									
+									total += p.y;
+									divider += 1;
+									
 									float locX = (p.x * _zoomValue) + _uiBuffer + _frameOffset.x;
-									float locY = (p.y-_data[i].minVal)*(_graphSize/_data[i].range) + _uiBuffer*(i+1) + _graphSize*i;
+									float locY = -(p.y-_data[i].minVal)*((float)_graphSize/_data[i].range) - (float)_uiBuffer*(i+1) - _graphSize*i + getHeight();
 									
 									if(showPoints){
 										//canvas.drawCircle((p.x * _zoomValue) - _pointSize/2 + _frameOffset.x, (-p.y * _zoomValue) - _pointSize/2 + _frameOffset.y, _pointSize, paint);
@@ -412,10 +547,19 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 										canvas.drawLine(lastP.x, lastP.y, locX, locY, paint);
 									}
 									
-									lastP = new Point((int)locX, (int)locY);
+									lastP = new PointF((int)locX, (int)locY);
 								
 								}
 							}
+							
+							paint.setTextSize(60);
+							String avg = "" + decAcc(total/divider,2);
+							PointF sLoc = new PointF(getWidth() - (_uiBuffer*1.5f - paint.getTextSize()/2f) - avg.length()*paint.getTextSize()/3, getHeight() - _uiBuffer*(i+1f) - _graphSize*(i+.5f) + paint.getTextSize()/3f);
+							int c = paint.getColor();
+							
+							avgLoc.add(sLoc);
+							avgS.add(avg);
+							avgC.add(c);
 							
 							lastP = null;
 							
@@ -425,32 +569,39 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 						canvas.drawRect(new Rect(0,0,_uiBuffer,getHeight()), paint);
 						canvas.drawRect(new Rect(getWidth()-(_uiBuffer*3),0,getWidth(),getHeight()), paint);
 						
+						for(int i = 0; i < avgS.size(); i++){
+							paint.setColor(avgC.get(i));
+							canvas.drawText(avgS.get(i), avgLoc.get(i).x, avgLoc.get(i).y, paint);
+						}
+						
 						//draw axis
-						paint.setAlpha(255);
 						paint.setColor(Color.WHITE);
-						paint.setStrokeWidth(2);
+						paint.setAlpha(160);
+						paint.setStrokeWidth(1);
+						paint.setTextSize(textSize);
 						
 						for(int j = 1; j <= _activeSets; j++){
 							
 							String label;
 							canvas.drawLine(_uiBuffer, (_uiBuffer+_graphSize)*j, getWidth() - _uiBuffer*3, (_uiBuffer+_graphSize)*j, paint);
 							canvas.drawLine(_uiBuffer, _uiBuffer*j + _graphSize*(j-1), _uiBuffer, (_uiBuffer + _graphSize)*j, paint);
+							canvas.drawLine(getWidth() - _uiBuffer*3, _uiBuffer*j + _graphSize*(j-1), getWidth() - _uiBuffer*3, (_uiBuffer + _graphSize)*j, paint);
 							
 							for(int i = 0; i < 11; i++){
 								
-								canvas.drawLine(_uiBuffer + widthInterval*i, (_uiBuffer+_graphSize)*j - 10, _uiBuffer + widthInterval * i, (_uiBuffer+_graphSize)*j + 10, paint);
-								label = "" + decAcc(((widthInterval * i) - _frameOffset.x)/_zoomValue,2);
+								canvas.drawLine(_uiBuffer + widthInterval*(float)i, ((float)_uiBuffer+_graphSize)*j - 10f, (float)_uiBuffer + widthInterval * (float)i, ((float)_uiBuffer+_graphSize)*(float)j + 10f, paint);
+								label = "" + decAcc(((widthInterval * (float)i) - (float)_frameOffset.x)/_zoomValue,2);
 								canvas.drawText(label,_uiBuffer + (widthInterval * i) - 3 * label.length(), getHeight() - _uiBuffer/2 - (_uiBuffer + _graphSize)*(j-1), paint);
-								if(i < 3){
-									canvas.drawLine(_uiBuffer - 10, getHeight() - _uiBuffer*j - _graphSize*(j-1) - heightInterval * i, _uiBuffer + 10, getHeight() - _uiBuffer*j - _graphSize*(j-1) - heightInterval * i, paint);
+								if(i < 5){
+									canvas.drawLine(_uiBuffer - 10, getHeight() - _uiBuffer*j - _graphSize*(j-1) - heightInterval * i, getWidth()-_uiBuffer*3, getHeight() - _uiBuffer*j - _graphSize*(j-1) - heightInterval * i, paint);
 									//label = "" + decAcc(-(getHeight() - _uiBuffer - (heightInterval * i) - _frameOffset.y)/_zoomValue,2);
-									label = "" + decAcc(_data[j-1].range * (i+1)/3 + _data[j-1].minVal, 2);
-									Log.d("","" + _data[j-1].minVal);
+									label = "" + decAcc(_data[j-1].range * ((float)i)/4f + _data[j-1].minVal, 2);
+									//Log.d("","" + _data[j-1].minVal);
 									canvas.drawText(label,_uiBuffer/2 - (3 * label.length()), getHeight() - _uiBuffer*j - _graphSize*(j-1) - (heightInterval * i) + 3, paint);
 								}
 								
 							}
-							
+								
 						}
 					
 					}
@@ -556,42 +707,42 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	//dummy points for testing
 	private void addTestPoints(){
 		
-		ArrayList<Point> list = _plotPoints;
-		ArrayList<Point> list2 = new ArrayList<Point>();
-		ArrayList<Point> list3 = new ArrayList<Point>();
+		ArrayList<PointF> list = _plotPoints;
+		ArrayList<PointF> list2 = new ArrayList<PointF>();
+		ArrayList<PointF> list3 = new ArrayList<PointF>();
 		
-		list.add(new Point(0, 215));
-		list.add(new Point(100, 50));
-		list.add(new Point(200, 215));
-		list.add(new Point(300, 135));
-		list.add(new Point(400, 450));
-		list.add(new Point(500, 315));
-		list.add(new Point(600, 585));
-		list.add(new Point(700, 250));
-		list.add(new Point(800, 375));
-		list.add(new Point(900, 85));
+		list.add(new PointF(0, 215));
+		list.add(new PointF(100, 50));
+		list.add(new PointF(200, 215));
+		list.add(new PointF(300, 135));
+		list.add(new PointF(400, 450));
+		list.add(new PointF(500, 315));
+		list.add(new PointF(600, 585));
+		list.add(new PointF(700, 250));
+		list.add(new PointF(800, 375));
+		list.add(new PointF(900, 85));
 		
-		list2.add(new Point(0, 85));
-		list2.add(new Point(100, 375));
-		list2.add(new Point(200, 250));
-		list2.add(new Point(300, 585));
-		list2.add(new Point(400, 315));
-		list2.add(new Point(500, 450));
-		list2.add(new Point(600, 135));
-		list2.add(new Point(700, 215));
-		list2.add(new Point(800, 50));
-		list2.add(new Point(900, 215));
+		list2.add(new PointF(0, 85));
+		list2.add(new PointF(100, 375));
+		list2.add(new PointF(200, 250));
+		list2.add(new PointF(300, 585));
+		list2.add(new PointF(400, 315));
+		list2.add(new PointF(500, 450));
+		list2.add(new PointF(600, 135));
+		list2.add(new PointF(700, 215));
+		list2.add(new PointF(800, 50));
+		list2.add(new PointF(900, 215));
 		
-		list3.add(new Point(0, 215));
-		list3.add(new Point(100, 50));
-		list3.add(new Point(200, 215));
-		list3.add(new Point(300, 135));
-		list3.add(new Point(400, 450));
-		list3.add(new Point(500, 315));
-		list3.add(new Point(600, 585));
-		list3.add(new Point(700, 250));
-		list3.add(new Point(800, 375));
-		list3.add(new Point(900, 85));
+		list3.add(new PointF(0, 215));
+		list3.add(new PointF(100, 50));
+		list3.add(new PointF(200, 215));
+		list3.add(new PointF(300, 135));
+		list3.add(new PointF(400, 450));
+		list3.add(new PointF(500, 315));
+		list3.add(new PointF(600, 585));
+		list3.add(new PointF(700, 250));
+		list3.add(new PointF(800, 375));
+		list3.add(new PointF(900, 85));
 		
 //		_points = new ArrayList<Point>();
 //        for(int i = 0; i < 10; i++){
@@ -603,7 +754,16 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 		DataSet set3 = new DataSet("Test2", "TestUnits3", list3);
 		
 		DataSet[] testSets = {set1,set2,set3};
-		setData(testSets);
+		
+		DataSet[] realSets;
+		
+		try{
+			realSets = csv2DataSets();
+			setData(realSets);
+		} catch (Exception e){
+			Log.d("","" + e);
+			setData(testSets);
+		}
 		
 	}
 	

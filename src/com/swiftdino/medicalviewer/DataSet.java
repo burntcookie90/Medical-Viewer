@@ -1,6 +1,7 @@
 package com.swiftdino.medicalviewer;
 
 import android.graphics.Point;
+import android.graphics.PointF;
 
 public class DataSet {
 	
@@ -11,7 +12,7 @@ public class DataSet {
 	private String _units;
 	
 	//data
-	private Iterable<Point> _data;
+	private Iterable<PointF> _data;
 	
 	//maximum data value
 	public float maxVal;
@@ -23,14 +24,14 @@ public class DataSet {
 	public float range; 
 	
 	//takes in data type, unit label and data as well as sets the max/min/range of data
-	public DataSet(String name, String units, Iterable<Point> data){
+	public DataSet(String name, String units, Iterable<PointF> data){
 		_name = name;
 		_units = units;
 		_data = data;
 		setExtremeVals();
 	}
 	
-	public Iterable<Point> getData(){
+	public Iterable<PointF> getData(){
 		return _data;
 	}
 	
@@ -42,7 +43,7 @@ public class DataSet {
 		return _units;
 	}
 	
-	public void setData(Iterable<Point> data){
+	public void setData(Iterable<PointF> data){
 		_data = data;
 	}
 	
@@ -57,7 +58,7 @@ public class DataSet {
 	private void setExtremeVals(){
 		maxVal = Float.MIN_VALUE;
 		minVal = Float.MAX_VALUE;
-		for(Point p : _data){
+		for(PointF p : _data){
 			if(p.y > maxVal) maxVal = p.y;
 			if(p.y < minVal) minVal = p.y;
 		}
