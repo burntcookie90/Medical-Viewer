@@ -1,7 +1,12 @@
-.portrait {
-
+#portrait {
+	text-indent: -999em;
+	/*position: absolute;
+	left: -999em;*/
 }
 
-.landscape {
 
+#landscape {
+	text-indent: -999em;
+	/*position: absolute;
+	left: -999em;*/
 }
