@@ -46,32 +46,32 @@ public class MasterListActivity extends FragmentActivity {// implements
 
 		return true;
 	}*/
-
-	public void onListItemSelected(String id) {
-
-		// Load the Fragment in an activity if its not present,
-		// otherwise just update the fragment.
-		Log.d(TAG, "Loading the detail view fragment.");
-
-		DetailViewFragment detailView = (DetailViewFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.fragment_detailview);
-
-		if (detailView == null || !detailView.isInLayout()) {
-			Log.d(TAG,
-					"DetailViewFragment is null. Starting new DetailViewActivity");
-
-			Intent detailIntent = new Intent(this, DetailViewActivity.class);
-			detailIntent.setData(Uri.parse(id));
-			startActivity(detailIntent);
-			Log.d(TAG, "DetailViewActivity has been started.");
-
-		} else {
-			// update fragment
-			// right now im just starting a new intent
-			Log.d(TAG, "DetailViewFragment exists. Updating graph.");
-
-			detailView.updateGraph(id);
-		}
-	}
+	
+//	public void onListItemSelected(String id) {
+//
+//		// Load the Fragment in an activity if its not present,
+//		// otherwise just update the fragment.
+//		Log.d(TAG, "Loading the detail view fragment.");
+//
+//		DetailViewFragment detailView = (DetailViewFragment) getSupportFragmentManager()
+//				.findFragmentById(R.id.fragment_detailview);
+//
+//		if (detailView == null || !detailView.isInLayout()) {
+//			Log.d(TAG,
+//					"DetailViewFragment is null. Starting new DetailViewActivity");
+//
+//			Intent detailIntent = new Intent(this, DetailViewActivity.class);
+//			detailIntent.setData(Uri.parse(id));
+//			startActivity(detailIntent);
+//			Log.d(TAG, "DetailViewActivity has been started.");
+//
+//		} else {
+//			// update fragment
+//			// right now im just starting a new intent
+//			Log.d(TAG, "DetailViewFragment exists. Updating graph.");
+//
+//			detailView.updateGraph(id);
+//		}
+//	}
 
 }

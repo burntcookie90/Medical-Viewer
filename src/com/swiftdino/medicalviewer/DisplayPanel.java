@@ -25,12 +25,13 @@ import android.view.SurfaceView;
 public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback {
 	
 	//debug values
-	private int _debug = 2;
+	private int _debug = 3;
 	private final int DEBUG_MULTI_TOUCH = 0;
 	private final int DEBUG_PLOT_POINTS = 1;
 	
 	//Actual data is used
 	private final int PLOT_DATA = 2;
+	private final int OPENGL = 3;
 	
 	//DataSet Colors
 	private final int[] _colors = {Color.BLUE, Color.YELLOW, Color.GREEN};
@@ -45,6 +46,7 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 	//Data input from queries
 	private DataSet[] _data = new DataSet[5];
 	private int _activeSets = 0;
+	private Patient _currentPatient;
 	
 	//input data points
 	Iterable<PointF> _points = null;
@@ -140,6 +142,10 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 			_data[i++] = ds;
 		}
 		_activeSets = i;
+	}
+	
+	public void setCurrentPatient(Patient patient){
+		_currentPatient = patient;
 	}
 	
 	public int distance(float x1, float y1, float x2, float y2){
@@ -252,6 +258,13 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 				_activeSets = 1;
 				break;
 		}
+		
+		try{
+			Log.d("", _currentPatient.getName());
+		} catch (NullPointerException e){
+			Log.d("", "No current Patient");
+		}
+		
 	}
 	
 	//when a touch event occurs
@@ -606,6 +619,9 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 					
 					}
 					
+					break;
+					
+				case OPENGL:
 					break;
 			
 			}

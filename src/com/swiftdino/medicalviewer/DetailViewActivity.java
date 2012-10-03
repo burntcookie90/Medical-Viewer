@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 public class DetailViewActivity extends FragmentActivity {
 	final String TAG = "DetailViewActivity";
@@ -34,7 +35,7 @@ public class DetailViewActivity extends FragmentActivity {
 		// detailView.setArguments(arguments);
 
 		Log.d(TAG, "Updating detail view fragment");
-		detailView.updateGraph(content);
+		detailView.updateGraph(content,0);
 
 	}
 

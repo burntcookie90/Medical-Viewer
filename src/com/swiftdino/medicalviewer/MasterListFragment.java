@@ -79,7 +79,7 @@ public class MasterListFragment extends ListFragment {
 			// right now im just starting a new intent
 			Log.d(TAG, "DetailViewFragment exists. Updating graph.");
 
-			detailView.updateGraph("" + id);
+			detailView.updateGraph("" + id, position, l);
 		}
 	}
 

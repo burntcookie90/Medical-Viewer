@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class DetailViewFragment extends Fragment {
 
@@ -35,7 +36,7 @@ public class DetailViewFragment extends Fragment {
 	    return view;
     }
     
-	public void updateGraph(String content) {
+	public void updateGraph(String content, int position) {
 	    if (display != null) {
 	    	Log.d(TAG, "Updating graph.");
 	     //Log.d(TAG, "Arguments: "+getArguments().getString(ARG_ITEM_ID));
@@ -48,6 +49,8 @@ public class DetailViewFragment extends Fragment {
 	    	// sets zoom value of graph to a random value between .5 and 2.0
 	    	float zoom = (rand.nextInt(20) + 5.0f) / 10.0f;
 	    	//display.setZoom(zoom);
+	    	//Object p = lV.getItemAtPosition(position);
+	    	//display.setCurrentPatient(p);
 	    	display.changeActiveSets();
 	    }
 	    else
@@ -55,4 +58,11 @@ public class DetailViewFragment extends Fragment {
 	    	Log.d(TAG, "TextView is NULL!");
 	    }
 	}
+
+	public void updateGraph(String content, int position, ListView l){
+		updateGraph(content, position);
+		Patient p = (Patient)l.getItemAtPosition(position);
+		display.setCurrentPatient(p);
+	}
+	
 }
