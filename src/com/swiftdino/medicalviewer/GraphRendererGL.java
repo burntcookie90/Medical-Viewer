@@ -8,53 +8,91 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 public class GraphRendererGL implements GLSurfaceView.Renderer {
 	
 	private static final String TAG = "MyGLRenderer";
     private Triangle mTriangle;
+    private CGraph mcGraph;
+    
+    private static int fps = 0;
+    private int frameCount = 0;
+    private long lastCheck;
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjMatrix = new float[16];
     private final float[] mVMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
+    private final float[] mMVMatrix = new float[16];
 
     // Declare as volatile because we are updating it from another thread
     public volatile float mAngle;
     
     public volatile PointF offset;
-
+    public volatile PointF scale;
+    
+    public static int getFps(){
+    	return fps;
+    }
+    
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         
         offset = new PointF(0f,0f);
+        scale = new PointF(1f,1f);
 
         mTriangle = new Triangle();
+        mcGraph = new CGraph();
+        
+        lastCheck = System.currentTimeMillis();
     }
 
     public void onDrawFrame(GL10 unused) {
-
+    	
+    	frameCount++;
+    	
+    	if(System.currentTimeMillis() - lastCheck >= 1000){
+    		lastCheck = System.currentTimeMillis();
+    		fps = frameCount;
+    		frameCount = 0;
+    		DetailViewFragment.fps = fps;
+    	}
+    	
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
+        
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(mVMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mVMatrix, 0, 0, 0, 1.0f, 0, 0, 0f, 0f, 1.0f, 0f);
+        //Matrix.setLookAtM(mVMatrix, 0, offset.x, offset.y, 1.0f, offset.x, offset.y, 0f, 0f, 1.0f, 0f);
+        
+        Matrix.translateM(mMVMatrix, 0, mVMatrix, 0, -offset.x, -offset.y, 0f);
+        Matrix.scaleM(mMVMatrix, 0, scale.x, 1.0f, 1.0f);
         
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVMatrix, 0);
 
         // Create a rotation for the triangle
         //long time = SystemClock.uptimeMillis() % 4000L;
         //float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
+        
+        // set current rotation
+        //Matrix.translateM(mRotationMatrix, 0, offset.x, 0, 0);
+        Matrix.setRotateM(mRotationMatrix, 0, 0, 0, 0, -1.0f);
+        //Matrix.translateM(mRotationMatrix, 0, offset.x, 0, 0);
 
         // Combine the rotation matrix with the projection and camera view
-        Matrix.multiplyMM(mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
+        //Matrix.multiplyMM(mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
 
-        // Draw triangle
+        // Draw objects
         mTriangle.draw(mMVPMatrix, MyColors.BLUE_SOLID);
+        mcGraph.draw(mMVPMatrix,MyColors.RED_SOLID);
+        
+        //Log.d("","" + offset.x + " : " + offset.y);
+        
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
@@ -66,8 +104,11 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 1, 10);
-        //Matrix.orthoM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        //Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 1.0f, 100.0f);
+        Matrix.orthoM(mProjMatrix, 0, 0, width, 0, height, 1.0f, 100.0f);
+        //Matrix.orthoM(mProjMatrix, 0, -1, 1, -1, 1, 1.0f, 100.0f);
+        
+        Log.d("",width + " : " + height);
 
     }
 

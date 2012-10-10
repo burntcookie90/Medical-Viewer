@@ -3,12 +3,11 @@ package com.swiftdino.medicalviewer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Random;
 
-import android.graphics.PointF;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 
-public class Triangle {
+public class CGraph {
 
 	private final String vertexShaderCode =
 	// This matrix member variable provides a hook to manipulate
@@ -34,29 +33,42 @@ public class Triangle {
 	static final int DIM_3D = 3;
 	private int currentDim = DIM_3D;
 
-	static float triangleCoords[] = { // in counterclockwise order:
-			448.0f, 628.0f, 0.0f, // top
-			0.0f, 0.0f, 0.0f, // bottom left
-			896.0f, 0.0f, 0.0f // bottom right
-	};
-	
-	private final int vertexCount = triangleCoords.length / currentDim;
+	private float plotCoords[] = new float[9000];
+
+	private final int vertexCount = plotCoords.length / currentDim;
 	private final int vertexStride = currentDim * 4; // 4 bytes per vertex
 
-	public Triangle() {
+	public CGraph() {
+		
+		Random rand = new Random();
+		
+		// dummy test data
+		for(int i = 0; i < plotCoords.length; i++){
+			switch(i%3){
+				case 0:
+					plotCoords[i] = i/(plotCoords.length/896);
+					break;
+				case 1:
+					plotCoords[i] = rand.nextFloat()*628;
+					break;
+				case 2:
+					plotCoords[i] = 0f;
+					break;
+			}
+		}
 		
 		// initialize vertex byte buffer for shape coordinates
 		ByteBuffer bb = ByteBuffer.allocateDirect(
 		// (number of coordinate values * 4 bytes per float)
-				triangleCoords.length * 4);
-		
+				plotCoords.length * 4);
+
 		// use the device hardware's native byte order
 		bb.order(ByteOrder.nativeOrder());
 
 		// create a floating point buffer from the ByteBuffer
 		vertexBuffer = bb.asFloatBuffer();
 		// add the coordinates to the FloatBuffer
-		vertexBuffer.put(triangleCoords);
+		vertexBuffer.put(plotCoords);
 		// set the buffer to read the first coordinate
 		vertexBuffer.position(0);
 
@@ -103,13 +115,12 @@ public class Triangle {
 		// Apply the projection and view transformation
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 		GraphRendererGL.checkGlError("glUniformMatrix4fv");
-		
+
 		// Draw the triangle
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
+		GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, vertexCount);
 
 		// Disable vertex array
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
 
 	}
-
 }

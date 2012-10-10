@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 public class GraphViewGL extends GLSurfaceView{
 	
@@ -15,7 +16,7 @@ public class GraphViewGL extends GLSurfaceView{
 		setEGLContextClientVersion(2);
 		mRenderer = new GraphRendererGL();
 		setRenderer(mRenderer);
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 	
 	public GraphViewGL(Context context, AttributeSet attrs) {
@@ -23,7 +24,7 @@ public class GraphViewGL extends GLSurfaceView{
 		setEGLContextClientVersion(2);
 		mRenderer = new GraphRendererGL();
 		setRenderer(mRenderer);
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 	
 	public GraphViewGL(Context context, AttributeSet attrs, int defStyle) {
@@ -31,7 +32,7 @@ public class GraphViewGL extends GLSurfaceView{
 		setEGLContextClientVersion(2);
 		mRenderer = new GraphRendererGL();
 		setRenderer(mRenderer);
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 	
 	private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
@@ -54,22 +55,17 @@ public class GraphViewGL extends GLSurfaceView{
             	
             	if(mPreviousX != 0 && mPreviousY != 0){
 	                float dx = x - mPreviousX;
-	                float dy = y - mPreviousY;
+	                float dy = mPreviousY - y;
 	                
-	                //mRenderer.offset.x += dx/getWidth();
-	               	//mRenderer.offset.y += dy/getHeight();
+	                if(Math.abs(dx) > Math.abs(dy)){
+	                	mRenderer.offset.x -= dx;//(getWidth()/2);
+	                	//mRenderer.offset.y += dy/(getHeight()/2);
+	                }
+	                else{
+	                	mRenderer.scale.x += dy/((float)getHeight());
+	                	mRenderer.scale.y += dy/((float)getHeight());
+	                }
 	                
-	                // reverse direction of rotation above the mid-line
-	                if (y > getHeight() / 2) {
-	                  dx = dx * -1 ;
-	                }
-	
-	                // reverse direction of rotation to left of the mid-line
-	                if (x < getWidth() / 2) {
-	                  dy = dy * -1 ;
-	                }
-	
-	                mRenderer.mAngle -= (dx + dy) * TOUCH_SCALE_FACTOR;  // = 180.0f / 320
 	                requestRender();
             	}
         }

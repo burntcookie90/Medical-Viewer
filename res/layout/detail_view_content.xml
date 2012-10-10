@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
-    android:gravity="center"
-    >
-
+    android:layout_height="fill_parent"
+    android:focusableInTouchMode="true"
+    android:gravity="top" >
+
     <com.swiftdino.medicalviewer.GraphViewGL
         android:id="@+id/graphViewGL1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.swiftdino.medicalviewer.DisplayPanel
-        android:id="@+id/displayPanel1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <TextView
+        android:id="@+id/fpsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textColorLink="@android:color/white"
+        android:textSize="40dp" />
 
-</LinearLayout>
+</RelativeLayout>

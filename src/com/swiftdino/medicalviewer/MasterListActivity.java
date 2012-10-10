@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 public class MasterListActivity extends FragmentActivity {// implements
 	// MasterListFragment.OnListItemSelectedListener {
@@ -15,12 +16,14 @@ public class MasterListActivity extends FragmentActivity {// implements
 	final String TAG = "MasterListActivity";
 
 	private SearchView mSearchView;
-
+	
+	private static TextView fpsView;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.master_list_fragment);
-
+		fpsView = (TextView)findViewById(R.id.fpsView);
 		// info display container in activity_info_display.xml
 		/*
 		 * if (findViewById(R.id.info_display_container) != null) { mTwoPane =
@@ -28,6 +31,10 @@ public class MasterListActivity extends FragmentActivity {// implements
 		 * .findFragmentById(R.id.item_list)) .setActivateOnItemClick(true); }
 		 */
 
+	}
+	
+	public static void setFps(int fps){
+		fpsView.setText(""+fps);
 	}
 
 	/*public boolean onCreateOptionsMenu(Menu menu) {

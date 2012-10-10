@@ -7,10 +7,11 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class DetailViewActivity extends FragmentActivity {
 	final String TAG = "DetailViewActivity";
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,9 +37,11 @@ public class DetailViewActivity extends FragmentActivity {
 
 		Log.d(TAG, "Updating detail view fragment");
 		detailView.updateGraph(content,0);
+		
 
 	}
-
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
