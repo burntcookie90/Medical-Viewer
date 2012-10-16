@@ -29,6 +29,8 @@
         </activity>
         <activity
             android:name=".DetailViewActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard"
+            android:launchMode="singleTask"
         />
         <activity android:name=".SearchableActivity" >
 	        <intent-filter>

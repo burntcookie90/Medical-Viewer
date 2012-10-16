@@ -35,15 +35,18 @@ public class MasterListFragment extends ListFragment {
 																// depending on
 																// search
 	private String query;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		setRetainInstance(true);
+		
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 		// listItemSelectedListener = (OnListItemSelectedListener)
 		// getActivity();
 		createListData();
-
+		
 		loader = new StringLoader(getActivity(), this);
 		adapter = new StringAdapter(listData);
 		setListAdapter(adapter);
@@ -55,7 +58,7 @@ public class MasterListFragment extends ListFragment {
 	}
 
 	public void onListItemClick(ListView l, View v, int position, long id) {
-
+		
 		// Load the Fragment in an activity if its not present,
 		// otherwise just update the fragment.
 		Log.d(TAG, "Loading the detail view fragment.");
@@ -78,8 +81,9 @@ public class MasterListFragment extends ListFragment {
 			// update fragment
 			// right now im just starting a new intent
 			Log.d(TAG, "DetailViewFragment exists. Updating graph.");
-
+			
 			detailView.updateGraph("" + id, position, l);
+			
 		}
 	}
 

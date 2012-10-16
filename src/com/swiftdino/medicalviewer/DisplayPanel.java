@@ -188,6 +188,8 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 				
 		line = csv.readLine();
 		
+		float startTime = -1;
+		
 		while(line != null){
 			
 			//Log.d("", "A");
@@ -203,7 +205,8 @@ public class DisplayPanel extends SurfaceView implements SurfaceHolder.Callback 
 				mult /= 60;
 			}
 			
-			time -= 3600;
+			if(startTime < 0) startTime = time;
+			time -= startTime;
 			
 			//Log.d("","B");
 			

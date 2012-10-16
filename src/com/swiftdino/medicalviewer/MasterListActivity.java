@@ -1,7 +1,6 @@
 package com.swiftdino.medicalviewer;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -80,5 +79,5 @@ public class MasterListActivity extends FragmentActivity {// implements
 //			detailView.updateGraph(id);
 //		}
 //	}
-
+	
 }

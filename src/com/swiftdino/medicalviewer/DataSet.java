@@ -1,6 +1,5 @@
 package com.swiftdino.medicalviewer;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 
 public class DataSet {

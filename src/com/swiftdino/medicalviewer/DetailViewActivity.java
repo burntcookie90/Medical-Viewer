@@ -1,13 +1,12 @@
 package com.swiftdino.medicalviewer;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 public class DetailViewActivity extends FragmentActivity {
 	final String TAG = "DetailViewActivity";
@@ -15,29 +14,32 @@ public class DetailViewActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
+	
 		Log.d(TAG, "Setting Content View");
 		setContentView(R.layout.detail_view_fragment);
-
+	
 		Log.d(TAG, "Getting Intent");
 		Intent launchingIntent = getIntent();
 		String content = launchingIntent.getData().toString();
-
+	
 		Log.d(TAG, "Content: " + content);
 		Log.d(TAG, "Starting detail view fragment");
 		DetailViewFragment detailView = (DetailViewFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_detailview);
-
+	
 		// Bundle arguments = new Bundle();
 		// arguments.putString(DetailViewFragment.ARG_ITEM_ID,
 		// getIntent().getStringExtra(DetailViewFragment.ARG_ITEM_ID));
 		// detailView.setArguments(arguments);
-
+	
 		Log.d(TAG, "Updating detail view fragment");
-		detailView.updateGraph(content,0);
-		
+		try{
+			detailView.updateGraph(content,0);
+		} catch (Exception e) {
+			Log.d("",e.toString());
+		}
 
 	}
 	
@@ -52,4 +54,7 @@ public class DetailViewActivity extends FragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
 }
+
+	

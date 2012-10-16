@@ -20,12 +20,13 @@ public class DetailViewFragment extends Fragment {
 
 	final String TAG = "DetailViewFragment";
     public static final String ARG_ITEM_ID = "item_id";
-    private DisplayPanel display;
+    private View _view;
+    private GraphViewGL display;
     DummyContent.DummyItem mItem;
     Random rand = new Random();
     
     private static TextView fpsView;
-    public static int fps = 0;
+    public static float fps = 0;
     private Timer myTimer;
     final Handler myHandler = new Handler();
     
@@ -48,29 +49,38 @@ public class DetailViewFragment extends Fragment {
     
     final Runnable myRunnable = new Runnable() {
     	public void run() {
-    		fpsView.setText("" + fps);
+    		fpsView.setText("" + fAcc(fps,2));
     	}
     };
     
+    private float fAcc(float orig, int acc){
+    	float temp = (float)(orig * Math.pow(10, acc));
+    	float fixed = (int)temp;
+    	return (float)(fixed/Math.pow(10, acc));
+    }
+    
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	setRetainInstance(true);
     	Log.d(TAG, "Creating view from detail_view_content. Finding TextView.");
-        View view = (View) inflater.inflate(R.layout.detail_view_content, container, true); 
+        View view = (View) inflater.inflate(R.layout.detail_view_content, container, true);
+        _view = view;
         
         // custom display panel that draws the graph
-        //display =  ((DisplayPanel) view.findViewById(R.id.displayPanel1));
-        
+        display =  (GraphViewGL) view.findViewById(R.id.graphViewGL1);
         fpsView = (TextView)view.findViewById(R.id.fpsView);
         
    	    Log.d(TAG, "Found TextView and Returning View");
 	    return view;
 	    
-	    
     }
     
 	public void updateGraph(String content, int position) {
 	    if (display != null) {
+	    	// zoom to the graph at index - position%2
+	    	display.zoomTo(position%2);
 	    	Log.d(TAG, "Updating graph.");
-	     //Log.d(TAG, "Arguments: "+getArguments().getString(ARG_ITEM_ID));
+	    	//display.doStuff();
+	    //Log.d(TAG, "Arguments: "+getArguments().getString(ARG_ITEM_ID));
          //   mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 	      //	Log.d(TAG, "Setting TextView to content.");
 	    // Log.d(TAG, "mItem.content: "+mItem.content);
@@ -78,7 +88,7 @@ public class DetailViewFragment extends Fragment {
 	    	//display.setText("graph");
 	    	
 	    	// sets zoom value of graph to a random value between .5 and 2.0
-	    	float zoom = (rand.nextInt(20) + 5.0f) / 10.0f;
+	    	//float zoom = (rand.nextInt(20) + 5.0f) / 10.0f;
 	    	//display.setZoom(zoom);
 	    	//Object p = lV.getItemAtPosition(position);
 	    	//display.setCurrentPatient(p);
@@ -86,15 +96,27 @@ public class DetailViewFragment extends Fragment {
 	    }
 	    else
 	    {
-	    	Log.d(TAG, "TextView is NULL!");
+	    	Log.d(TAG, "View is NULL!");
+	    	display = (GraphViewGL) _view.findViewById(R.id.graphViewGL1);
 	    }
 	}
 
 	public void updateGraph(String content, int position, ListView l){
 		updateGraph(content, position);
-		Patient p = (Patient)l.getItemAtPosition(position);
+		//Patient p = (Patient)l.getItemAtPosition(position);
 		//display.setCurrentPatient(p);
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		display.onPause();
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		display.onResume();
+	}
 	
 }
