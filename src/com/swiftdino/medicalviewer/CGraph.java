@@ -8,6 +8,7 @@ import java.util.Random;
 
 import android.graphics.PointF;
 import android.opengl.GLES20;
+import android.util.Log;
 
 public class CGraph {
 
@@ -34,7 +35,10 @@ public class CGraph {
 	private int mPositionHandle;
 	private int mColorHandle;
 	private int mMVPMatrixHandle;
-
+	
+	// associated grids/labels
+	private Line[] _grids;
+	
 	// number of coordinates per vertex in this array
 	static final int DIM_2D = 2;
 	static final int DIM_3D = 3;
@@ -152,6 +156,34 @@ public class CGraph {
 		// x values represent diff from start value
 		_time = pts.get(pts.size()-1).x;
 		
+		//create grids
+		int secs = roundUp(_time);
+		int rangeVals = roundUp(_range/_nFactor);
+		float start = -(rangeVals/2);
+		_grids = new Line[5+secs];
+		_grids[0] = new Line(new float[] {
+				plotCoords[0],_min,0.0f,
+				secs,_min,0.0f
+		});
+		for(int j = 0;j<secs+1;j++){
+			_grids[j+1] = new Line(new float[] {
+					plotCoords[0] + (float)j,_max,0.0f,
+					plotCoords[0] + (float)j,_min - .03f,0.0f
+			});
+		}
+		_grids[secs+2] = new Line(new float[] {
+				plotCoords[0], _min, 0.0f,
+				plotCoords[0], _max, 0.0f
+		});
+		_grids[secs+3] = new Line(new float[] {
+				plotCoords[0] - .03f, _vOffset, 0.0f,
+				secs, _vOffset, 0.0f
+		});
+		_grids[secs+4] = new Line(new float[] {
+				plotCoords[0] - .03f, _max, 0.0f,
+				secs, _max, 0.0f
+		});
+		
 		
 		// initialize vertex byte buffer for shape coordinates
 		ByteBuffer bb = ByteBuffer.allocateDirect(
@@ -217,7 +249,13 @@ public class CGraph {
 
 		// Disable vertex array
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
-
+		
+		// draw associated grids etc
+		for(Line l : _grids){
+			if(l != null)l.draw(mvpMatrix, MyColors.GREY_TRANSPARENT);
+		}
+		
+		
 	}
 	
 	public float getRange(){
@@ -234,6 +272,16 @@ public class CGraph {
 	
 	public float getMax(){
 		return _max;
+	}
+	
+	private int round(float num){
+		if(num - (int)num < .5f) return (int)(num);
+		else return (int)(num + 1);
+	}
+	
+	private int roundUp(float num){
+		if(num - (int)num > .000001f) return (int)(num + 1);
+		else return (int) num;
 	}
 	
 }

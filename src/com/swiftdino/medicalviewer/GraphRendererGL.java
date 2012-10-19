@@ -26,16 +26,20 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 	// flag for initial zoom call
 	private boolean _initialized = false;
 	
+	private float[] _bgColor;
+	
 	// drawn objects
-    private Triangle mTriangle;
-    private CGraph mcGraph;
-    private Rectangle rect;
     private CGraph[] _dataSets;
     private float[][] _colors = {
     		MyColors.BLUE_SOLID, 
     		MyColors.RED_SOLID
     };
     
+    // ui elements
+    private int cOrientation;
+    public static final int ORIENTATION_LANDSCAPE = 0;
+    public static final int ORIENTATION_PORTRAIT = 1;
+    private Rectangle[][] uiRects = new Rectangle[2][1];
     
     // fps display
     private static float fps = 0;
@@ -62,31 +66,29 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     // current screen width and height
     private int cWidth,cHeight;
     
-    public GraphRendererGL(Context context){
+    public GraphRendererGL(Context context, float[] bgColor){
     	ctx = context;
+    	_bgColor = bgColor;
     }
     
     // new surface is created
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
         // Set the background frame color
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(_bgColor[0],_bgColor[1],_bgColor[2],_bgColor[3]);
         
         // initialize camera position and scale
-        offset = new PointF(0f,0f);
+        offset = new PointF(-50.0f,0f);
         scale = new PointF(1f,1f);
-        
-        // initialize drawn objects
-        mTriangle = new Triangle();
-        mcGraph = new CGraph();
         
         // set first time for fps check
         lastCheck = System.currentTimeMillis();
         
+        // create graph data from csv files
         try{
         	_dataSets = csv2DataSet();
         } catch (Exception e){
-        	Log.d("",e.toString());
+        	Log.d(TAG,e.toString());
         }
         
     }
@@ -127,16 +129,18 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
         // Combine the rotation matrix with the projection and camera view
         //Matrix.multiplyMM(mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
 
-        // Draw objects
-        //mcGraph.draw(mMVPMatrix, MyColors.RED_SOLID);  
+        // Draw objects  
         if(_dataSets != null){
         	int i = 0;
         	for(CGraph g : _dataSets){
         		g.draw(mMVPMatrix, _colors[i++]);
         	}
         }
-        //_dataSets[0].draw(mMVPMatrix, MyColors.BLUE_SOLID);
-        //rect.draw(mMVPMatrixUI, MyColors.BLACK_SOLID);
+        
+        // draw ui elements
+        for(Rectangle r : uiRects[cOrientation]){
+        	r.draw(mMVPMatrixUI, _bgColor);
+        }
         
         //Log.d("","" + offset.x + " : " + offset.y);
         
@@ -144,6 +148,9 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     
     // when surface changes (orientation change etc)
     public void onSurfaceChanged(GL10 unused, int width, int height) {
+    	
+    	if(width > height) cOrientation = ORIENTATION_LANDSCAPE;
+    	else cOrientation = ORIENTATION_PORTRAIT;
     	
     	if(!_initialized){
     		zoomAll(width, height);
@@ -155,12 +162,12 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     	cHeight = height;
     	
     	// create ui elements if none exist for current orientation
-    	if(rect == null){
-        	rect = new Rectangle(new float[] {
-            		cWidth*.8f, cHeight, 0.0f,
+    	if(uiRects[cOrientation][0] == null){
+        	uiRects[cOrientation][0] = new Rectangle(new float[] {
+            		cWidth*.75f, cHeight, 0.0f,
             		cWidth, cHeight, 0.0f,
             		cWidth, 0.0f, 0.0f,
-            		cWidth*.8f, 0.0f, 0.0f});
+            		cWidth*.75f, 0.0f, 0.0f});
         }
     	
     	// Adjust the viewport based on geometry changes,
@@ -253,6 +260,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		line = csv.readLine();
 		
 		float startTime = -1;
+		float[] mults = new float[] {360.0f, 60.0f, 1.0f};
 		
 		while(line != null){
 			
@@ -263,10 +271,10 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 			values[0] = values[0].replaceAll("'", "");
 			values[0] = values[0].replaceAll("\\[", "");
 			values[0] = values[0].replaceAll("\\]", "");
-			float time = 0, mult = 360;
+			float time = 0;
+			int index = 0;
 			for(String s : values[0].split(":")){
-				time += (new Float(s))*mult;
-				mult /= 60;
+				time += (new Float(s))*mults[index++];
 			}
 			
 			if(startTime < 0) startTime = time;
@@ -288,7 +296,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		}
 		
 		for(int i = 0; i < extremeVals.length; i+=2){
-			extremeVals[i] -= extremeVals[i+1];
+			extremeVals[i] = Math.abs(extremeVals[i] - extremeVals[i+1]);
 		}
 		
 		float[][] ranges = new float[sets][2];

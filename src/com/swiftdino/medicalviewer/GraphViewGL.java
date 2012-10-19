@@ -21,7 +21,7 @@ public class GraphViewGL extends GLSurfaceView{
 		super(context);
 		setEGLContextClientVersion(2);
 		setPreserveEGLContextOnPause(true);
-		mRenderer = new GraphRendererGL(context);
+		mRenderer = new GraphRendererGL(context, MyColors.BLACK_SOLID);
 		setRenderer(mRenderer);
 		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
@@ -30,7 +30,7 @@ public class GraphViewGL extends GLSurfaceView{
 		super(context,attrs);
 		setEGLContextClientVersion(2);
 		setPreserveEGLContextOnPause(true);
-		mRenderer = new GraphRendererGL(context);
+		mRenderer = new GraphRendererGL(context, MyColors.BLACK_SOLID);
 		setRenderer(mRenderer);
 		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
@@ -39,7 +39,7 @@ public class GraphViewGL extends GLSurfaceView{
 		super(context, attrs);
 		setEGLContextClientVersion(2);
 		setPreserveEGLContextOnPause(true);
-		mRenderer = new GraphRendererGL(context);
+		mRenderer = new GraphRendererGL(context, MyColors.BLACK_SOLID);
 		setRenderer(mRenderer);
 		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
