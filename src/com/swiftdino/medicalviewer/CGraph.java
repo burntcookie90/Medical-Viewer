@@ -39,6 +39,9 @@ public class CGraph {
 	// associated grids/labels
 	private Line[] _grids;
 	
+	// associated annotations
+	private ArrayList<Annotation> _annotations = new ArrayList<Annotation>(); 
+	
 	// number of coordinates per vertex in this array
 	static final int DIM_2D = 2;
 	static final int DIM_3D = 3;
@@ -217,6 +220,16 @@ public class CGraph {
 	
 	public void draw(float[] mvpMatrix, float[] color) {
 
+		// draw associated grids etc
+		for(Line l : _grids){
+			if(l != null)l.draw(mvpMatrix, MyColors.GREY_TRANSPARENT);
+		}
+		
+		// draw annotation markers
+		for (Annotation a : _annotations){
+			a.getRectangle().draw(mvpMatrix, MyColors.GREY_TRANSPARENT);
+		}
+		
 		// Add program to OpenGL environment
 		GLES20.glUseProgram(mProgram);
 
@@ -248,13 +261,7 @@ public class CGraph {
 		GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, vertexCount);
 
 		// Disable vertex array
-		GLES20.glDisableVertexAttribArray(mPositionHandle);
-		
-		// draw associated grids etc
-		for(Line l : _grids){
-			if(l != null)l.draw(mvpMatrix, MyColors.GREY_TRANSPARENT);
-		}
-		
+		GLES20.glDisableVertexAttribArray(mPositionHandle);	
 		
 	}
 	
@@ -274,6 +281,10 @@ public class CGraph {
 		return _max;
 	}
 	
+	public float getFactor(){
+		return _nFactor;
+	}
+	
 	private int round(float num){
 		if(num - (int)num < .5f) return (int)(num);
 		else return (int)(num + 1);
@@ -282,6 +293,27 @@ public class CGraph {
 	private int roundUp(float num){
 		if(num - (int)num > .000001f) return (int)(num + 1);
 		else return (int) num;
+	}
+	
+	public void addAnnotation(Annotation a){
+		_annotations.add(a);
+		Log.d("","Annotation added: " + a.get_content());
+	}
+	
+	public ArrayList<Annotation> getAnnotations(){
+		return _annotations;
+	}
+	
+	public Annotation getAnnotation(float time, float yVal){
+		Annotation found = null; 
+		for(Annotation a : _annotations){
+			if(a.getStart() <= time && time <= a.getEnd()){
+				if(a.getBot() <= yVal && yVal <= a.getTop()) found = a;
+			}
+		}
+		
+		return found;
+		
 	}
 	
 }

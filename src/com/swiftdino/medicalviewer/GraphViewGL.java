@@ -1,5 +1,6 @@
 package com.swiftdino.medicalviewer;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
@@ -7,6 +8,9 @@ import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class GraphViewGL extends GLSurfaceView{
 	
@@ -14,7 +18,8 @@ public class GraphViewGL extends GLSurfaceView{
 	private final GraphRendererGL mRenderer;
 	
 	// release location
-	private static float lastTouch = 0.0f; 
+	private static float lastTouch = 0.0f;
+	private static float lastY = 0.0f;
 	
 	// constructors (overloads necessary to specify instance in xml)
 	public GraphViewGL(Context context) {
@@ -50,6 +55,7 @@ public class GraphViewGL extends GLSurfaceView{
     
     // location of the first pointer down
     private PointF firstDown;
+    private long firstTime;
     
     // flags for if the screen is zoomed and if it has been dragged
     private boolean zoomed = false;
@@ -70,7 +76,8 @@ public class GraphViewGL extends GLSurfaceView{
         	case MotionEvent.ACTION_DOWN:
         		
         		if(e.getPointerCount() < 2) 
-        			firstDown = new PointF(e.getX(),e.getY()); 
+        			firstDown = new PointF(e.getX(),e.getY());
+        			firstTime = System.currentTimeMillis();
         		
         		break;
         	
@@ -108,10 +115,16 @@ public class GraphViewGL extends GLSurfaceView{
             case MotionEvent.ACTION_UP:
             	
             	lastTouch = (e.getX() + mRenderer.offset.x)/mRenderer.scale.x;
+            	lastY = (getHeight() - e.getY() + mRenderer.offset.y)/mRenderer.scale.y;
             	//Log.d("","" + ((getHeight()-e.getY())/mRenderer.scale.y - mRenderer.getBuffer()));
             	//Log.d("","" + ((getHeight()-e.getY() + mRenderer.offset.y)/mRenderer.scale.y ));
             	
-            	if(!dragged && !zoomed){
+            	if(System.currentTimeMillis() - firstTime > 1000 && !dragged){
+            		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
+            		openAnnotationDialog(lastTouch, lastY, mRenderer.scale.x/mRenderer.scale.y,graphIndex,mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY));
+            	}
+            	
+            	else if(!dragged && !zoomed){
             		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
             		mRenderer.zoomTo(mRenderer.getSets()[graphIndex], getWidth(), getHeight());
             		zoomed = true;
@@ -158,5 +171,41 @@ public class GraphViewGL extends GLSurfaceView{
     	mRenderer.zoomTo(i);
     	zoomed = true;
     }
-
+    
+    private void openAnnotationDialog(final float timeStamp, final float yVal,final float scale, final int graphIndex, final Annotation anot){
+    	
+    	// custom dialog
+    	final Dialog dialog = new Dialog(getContext());
+    	dialog.setContentView(R.layout.annotation_dialog);
+    	dialog.setTitle("Title...");
+    	
+    	// set the custom dialog components
+    	final TextView text = (TextView) dialog.findViewById(R.id.annotationField);
+    	if(anot != null) text.setText(anot.get_content());
+    	else text.setText("(Annotation Here)");
+    	
+    	Button saveButton = (Button) dialog.findViewById(R.id.buttonSave);
+    	saveButton.setText("Save");
+    	// if button is pressed save annotation with input timestamp and text
+    	saveButton.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v){
+    			if(anot != null) anot.set_content(text.getText().toString());
+    			else mRenderer.getSets()[graphIndex].addAnnotation(new Annotation(timeStamp,yVal,scale,text.getText().toString(), mRenderer.getSets()[graphIndex]));
+    			dialog.dismiss();
+    		}
+    	});
+    	
+    	Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
+    	cancelButton.setText("Cancel");
+    	// if button is clicked, close the custom dialog
+    	cancelButton.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			dialog.dismiss();
+    		}
+    	});
+    	
+    	dialog.show();
+    	
+    }
+    
 }

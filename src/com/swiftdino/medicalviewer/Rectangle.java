@@ -28,7 +28,7 @@ public class Rectangle {
 	private int mPositionHandle;
 	private int mColorHandle;
 	private int mMVPMatrixHandle;
-
+	
 	// number of coordinates per vertex in this array
 	static final int COORDS_PER_VERTEX = 3;
 	
