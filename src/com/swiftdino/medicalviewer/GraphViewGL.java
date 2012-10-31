@@ -121,13 +121,17 @@ public class GraphViewGL extends GLSurfaceView{
             	
             	if(System.currentTimeMillis() - firstTime > 1000 && !dragged){
             		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
-            		openAnnotationDialog(lastTouch, lastY, mRenderer.scale.x/mRenderer.scale.y,graphIndex,mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY));
+            		openAnnotationEditDialog(lastTouch, lastY, mRenderer.scale.x/mRenderer.scale.y,graphIndex,mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY));
             	}
             	
             	else if(!dragged && !zoomed){
             		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
-            		mRenderer.zoomTo(mRenderer.getSets()[graphIndex], getWidth(), getHeight());
-            		zoomed = true;
+            		Annotation a = mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY);
+            		if(a != null) openAnnotationViewDialog(a);
+            		else{
+            			mRenderer.zoomTo(mRenderer.getSets()[graphIndex], getWidth(), getHeight());
+            			zoomed = true;
+            		}
             	}
             	
             	else if(!dragged){
@@ -172,17 +176,17 @@ public class GraphViewGL extends GLSurfaceView{
     	zoomed = true;
     }
     
-    private void openAnnotationDialog(final float timeStamp, final float yVal,final float scale, final int graphIndex, final Annotation anot){
+    private void openAnnotationEditDialog(final float timeStamp, final float yVal,final float scale, final int graphIndex, final Annotation anot){
     	
     	// custom dialog
     	final Dialog dialog = new Dialog(getContext());
-    	dialog.setContentView(R.layout.annotation_dialog);
-    	dialog.setTitle("Title...");
+    	dialog.setContentView(R.layout.annotation_edit_dialog);
+    	dialog.setTitle("Annotation Edit");
     	
     	// set the custom dialog components
     	final TextView text = (TextView) dialog.findViewById(R.id.annotationField);
     	if(anot != null) text.setText(anot.get_content());
-    	else text.setText("(Annotation Here)");
+    	else text.setHint("Annotation here");//text.setText("(Annotation Here)");
     	
     	Button saveButton = (Button) dialog.findViewById(R.id.buttonSave);
     	saveButton.setText("Save");
@@ -197,6 +201,40 @@ public class GraphViewGL extends GLSurfaceView{
     	
     	Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
     	cancelButton.setText("Cancel");
+    	// if button is clicked, close the custom dialog
+    	cancelButton.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			dialog.dismiss();
+    		}
+    	});
+    	
+    	dialog.show();
+    	
+    }
+    
+    private void openAnnotationViewDialog(final Annotation anot){
+    	
+    	// custom dialog
+    	final Dialog dialog = new Dialog(getContext());
+    	dialog.setContentView(R.layout.annotation_view_dialog);
+    	dialog.setTitle("Annotation View");
+    	
+    	// set the custom dialog components
+    	final TextView text = (TextView) dialog.findViewById(R.id.annotationView);
+    	text.setText(anot.get_content());
+    	
+    	Button saveButton = (Button) dialog.findViewById(R.id.buttonEdit);
+    	saveButton.setText("Edit");
+    	// if button is pressed save annotation with input timestamp and text
+    	saveButton.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v){
+    			openAnnotationEditDialog(0,0,0,0,anot);
+    			dialog.dismiss();
+    		}
+    	});
+    	
+    	Button cancelButton = (Button) dialog.findViewById(R.id.buttonBack);
+    	cancelButton.setText("Back");
     	// if button is clicked, close the custom dialog
     	cancelButton.setOnClickListener(new OnClickListener() {
     		public void onClick(View v) {
