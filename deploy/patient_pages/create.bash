@@ -1,7 +1,7 @@
 #!/bin/bash
 
 c=1
-while [ $c -le 19 ]
+while [ $c -le 2 ]
 do
 		filename="patient$c.html"
 		echo $filename
