@@ -7,7 +7,7 @@ do
 		echo $filename
 		touch $filename
 		echo "This is patient $c" > $filename
-		cat div.html | tee -a $filename
+		cat template_patient.html | tee -a $filename
 		(( c++ ))
 done
 
