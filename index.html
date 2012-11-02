@@ -36,32 +36,32 @@
 				function ajaxpage(url, containerid){
 				var page_request = false
 				if (window.XMLHttpRequest) // if Mozilla, Safari etc
-				page_request = new XMLHttpRequest()
+						page_request = new XMLHttpRequest()
 				else if (window.ActiveXObject){ // if IE
-				try {
-				page_request = new ActiveXObject("Msxml2.XMLHTTP")
-				} 
-				catch (e){
-				try{
-				page_request = new ActiveXObject("Microsoft.XMLHTTP")
-				}
-				catch (e){}
-				}
+						try {
+								page_request = new ActiveXObject("Msxml2.XMLHTTP")
+						} 
+						catch (e){
+								try{
+										page_request = new ActiveXObject("Microsoft.XMLHTTP")
+								}
+								catch (e){}
+						}
 				}
 				else
-				return false
+						return false
 				page_request.onreadystatechange=function(){
-				loadpage(page_request, containerid)
+						loadpage(page_request, containerid)
 				}
 				if (bustcachevar) //if bust caching of external page
-				bustcacheparameter=(url.indexOf("?")!=-1)? "&"+new Date().getTime() : "?"+new Date().getTime()
-				page_request.open('GET', url+bustcacheparameter, true)
-				page_request.send(null)
+						bustcacheparameter=(url.indexOf("?")!=-1)? "&"+new Date().getTime() : "?"+new Date().getTime()
+						page_request.open('GET', url+bustcacheparameter, true)
+						page_request.send(null)
 				}
 
 				function loadpage(page_request, containerid){
-				if (page_request.readyState == 4 && (page_request.status==200 || window.location.href.indexOf("http")==-1))
-				document.getElementById(containerid).innerHTML=page_request.responseText
+						if (page_request.readyState == 4 && (page_request.status==200 || window.location.href.indexOf("http")==-1))
+								document.getElementById(containerid).innerHTML=page_request.responseText
 				}
 
 				function loadobjs(){
@@ -136,11 +136,14 @@
 					</div>
 
 					<div class="content-primary" id="patient-info">
-						<p> Name: </p>
-						<p> Age: </p>
-						<p> Gender: </p>
-						<p> Blood Type: </p>
+						<p> Name: Doc 1 </p>
+						<p> Age: 7 </p>
+						<p> Gender: M </p>
+						<p> Blood Type: AB+ </p>
 					</div>
+			</div>
+			<div data-role="footer">
+					<h2>Swift Dino</h2>
 			</div>
 		</div>
     </body>
