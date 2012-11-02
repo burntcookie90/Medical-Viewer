@@ -21,5 +21,10 @@
         <item>Patient 1</item>
         <item>Patient 2</item>
     </string-array>
+    <string-array name="algorithms">
+        <item >ECG</item>
+        <item >Heart Rate</item>
+        <item >EEG</item>
+    </string-array>
 
 </resources>

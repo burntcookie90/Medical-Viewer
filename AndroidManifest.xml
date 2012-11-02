@@ -2,7 +2,10 @@
     package="com.swiftdino.medicalviewer"
     android:versionCode="1"
     android:versionName="1.0" >
-
+	
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:glEsVersion="0x00010000" android:required="true" />
+    
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="15" />

@@ -3,6 +3,7 @@ package com.swiftdino.medicalviewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,10 +17,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MasterListFragment extends ListFragment {
@@ -82,6 +90,7 @@ public class MasterListFragment extends ListFragment {
 			// right now im just starting a new intent
 			Log.d(TAG, "DetailViewFragment exists. Updating graph.");
 			
+			openQueryDialog((Patient)l.getItemAtPosition(position));
 			detailView.updateGraph("" + id, position, l);
 			
 		}
@@ -139,6 +148,65 @@ public class MasterListFragment extends ListFragment {
 		return listFilteredData;
 	}// met
 
+	private void openQueryDialog(final Patient p){
+		
+		float baseTime = 0;
+		
+		final Dialog dialog = new Dialog(getActivity());
+		dialog.setContentView(R.layout.patient_query_dialog);
+		dialog.setTitle(p.getName());
+		
+		final TextView tv = (TextView) dialog.findViewById(R.id.query_text_view);
+		final Spinner spin = (Spinner) dialog.findViewById(R.id.data_type_spinner);
+		final SeekBar bar = (SeekBar) dialog.findViewById(R.id.timeframe_seekbar);
+		
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.algorithms, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spin.setAdapter(adapter);
+		
+		tv.setText(spin.getSelectedItem() + " at Time: " + bar.getProgress());
+		
+		bar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				tv.setText(spin.getSelectedItem() + " at Time: " + bar.getProgress());
+			}
+			public void onStartTrackingTouch(SeekBar seekBar) {	
+			}
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+		});
+		
+		spin.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int pos, long id) {
+				String item = (String) parent.getItemAtPosition(pos);
+				tv.setText(item + " at Time: " + bar.getProgress());
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+		});
+		
+		Button cancelButton = (Button) dialog.findViewById(R.id.button_query_cancel);
+		cancelButton.setText("Cancel");
+		cancelButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
+		Button continueButton = (Button) dialog.findViewById(R.id.button_query_continue);
+		continueButton.setText("Continue");
+		continueButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
+		dialog.show();
+		
+	}
+	
 	private class LoaderCallBacks implements LoaderCallbacks<List<Patient>> {
 
 		public void onLoadFinished(Loader<List<Patient>> loader,

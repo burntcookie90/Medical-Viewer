@@ -115,7 +115,8 @@ public class GraphViewGL extends GLSurfaceView{
             case MotionEvent.ACTION_UP:
             	
             	lastTouch = (e.getX() + mRenderer.offset.x)/mRenderer.scale.x;
-            	lastY = (getHeight() - e.getY() + mRenderer.offset.y)/mRenderer.scale.y;
+            	lastY = (getHeight() - e.getY() + mRenderer.offset.y)/mRenderer.scale.y;	
+            	
             	//Log.d("","" + ((getHeight()-e.getY())/mRenderer.scale.y - mRenderer.getBuffer()));
             	//Log.d("","" + ((getHeight()-e.getY() + mRenderer.offset.y)/mRenderer.scale.y ));
             	
@@ -125,8 +126,10 @@ public class GraphViewGL extends GLSurfaceView{
             	}
             	
             	else if(!dragged && !zoomed){
+            		Annotation a;
             		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
-            		Annotation a = mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY);
+            		if(mRenderer.getFocusedGraph() == null) a = mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY);
+            		else a = mRenderer.getFocusedGraph().getAnnotation(lastTouch, lastY);
             		if(a != null) openAnnotationViewDialog(a);
             		else{
             			mRenderer.zoomTo(mRenderer.getSets()[graphIndex], getWidth(), getHeight());
@@ -135,8 +138,15 @@ public class GraphViewGL extends GLSurfaceView{
             	}
             	
             	else if(!dragged){
-            		mRenderer.zoomAll(getWidth(), getHeight());
-            		zoomed = false;
+            		Annotation a;
+            		int graphIndex = (int)(getHeight() - e.getY()) / (getHeight() / mRenderer.getSets().length);
+            		if(mRenderer.getFocusedGraph() == null) a = mRenderer.getSets()[graphIndex].getAnnotation(lastTouch, lastY);
+            		else a = mRenderer.getFocusedGraph().getAnnotation(lastTouch, lastY);
+            		if(a != null) openAnnotationViewDialog(a);
+            		else{
+            			mRenderer.zoomAll(getWidth(), getHeight());
+            			zoomed = false;
+            		}
             	}
             	
             	dragged = false;

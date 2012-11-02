@@ -28,6 +28,9 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 	
 	private float[] _bgColor;
 	
+	// current graph focus (null if zoomed to all)
+	private CGraph _currentZoomed = null;
+	
 	// drawn objects
     private CGraph[] _dataSets;
     private float[][] _colors = {
@@ -66,14 +69,17 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     // current screen width and height
     private int cWidth,cHeight;
     
+    private GLText _text;
+    
     public GraphRendererGL(Context context, float[] bgColor){
+    	super();
     	ctx = context;
     	_bgColor = bgColor;
     }
     
     // new surface is created
-    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    	
         // Set the background frame color
         GLES20.glClearColor(_bgColor[0],_bgColor[1],_bgColor[2],_bgColor[3]);
         
@@ -91,10 +97,13 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
         	Log.d(TAG,e.toString());
         }
         
+        _text = new GLText(gl,ctx.getAssets());
+        _text.load( "Roboto-Regular.ttf", 14, 2, 2 );
+        
     }
     
     // every frame
-    public void onDrawFrame(GL10 unused) {
+    public void onDrawFrame(GL10 gl) {
     	
     	// fps calculations
     	frameCount ++;
@@ -104,6 +113,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     		DetailViewFragment.fps = fps;
     		lastCheck = System.currentTimeMillis();
     	}
+    	
     	
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -147,7 +157,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     }
     
     // when surface changes (orientation change etc)
-    public void onSurfaceChanged(GL10 unused, int width, int height) {
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
     	
     	if(width > height) cOrientation = ORIENTATION_LANDSCAPE;
     	else cOrientation = ORIENTATION_PORTRAIT;
@@ -316,6 +326,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     	scale.x = ((float)width)/graph.getTime();
     	scale.y = ((float)height)/(graph.getRange() + _uiBuffer);
     	offset.y = scale.y * (graph.getMin() - _uiBuffer/2.0f);
+    	_currentZoomed = graph; 
     }
     
     // zoom to all current graphs
@@ -324,11 +335,16 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
     	scale.x = ((float)width)/_dataSets[0].getTime();
     	scale.y = ((float)height)/(_dataSets.length + _uiBuffer*(num+1.0f));
     	offset.y = scale.y * (_dataSets[0].getMin() - _uiBuffer);
+    	_currentZoomed = null;
     }
     
     // zoom to a single graph based on index
     public void zoomTo(int i){
     	zoomTo(_dataSets[i],cWidth, cHeight);
+    }
+    
+    public CGraph getFocusedGraph(){
+    	return _currentZoomed;
     }
     
     // return ui buffer
