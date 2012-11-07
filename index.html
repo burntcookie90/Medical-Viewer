@@ -3,25 +3,25 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="landscape"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Medical Viewer</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width initial-scale=1">
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Medical Viewer</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-		<link rel="stylesheet"
-			media="all and (min-width:500px)"
-			href="css/layout-phone.css">
-		<link rel="stylesheet"
-			media="all and (min-width:900px)"
-			href="css/layout-tablet.css">
-		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
-		<script type="text/javascript">
+	<link rel="stylesheet"
+	media="all and (min-width:500px)"
+	href="css/layout-phone.css">
+	<link rel="stylesheet"
+	media="all and (min-width:900px)"
+	href="css/layout-tablet.css">
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+	<script type="text/javascript">
 				/***********************************************
 				* Dynamic Ajax Content- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
 				* This notice MUST stay intact for legal use
@@ -34,114 +34,114 @@
 				var bustcacheparameter=""
 
 				function ajaxpage(url, containerid){
-				var page_request = false
+					var page_request = false
 				if (window.XMLHttpRequest) // if Mozilla, Safari etc
-						page_request = new XMLHttpRequest()
+					page_request = new XMLHttpRequest()
 				else if (window.ActiveXObject){ // if IE
-						try {
-								page_request = new ActiveXObject("Msxml2.XMLHTTP")
-						} 
-						catch (e){
-								try{
-										page_request = new ActiveXObject("Microsoft.XMLHTTP")
-								}
-								catch (e){}
+					try {
+						page_request = new ActiveXObject("Msxml2.XMLHTTP")
+					} 
+					catch (e){
+						try{
+							page_request = new ActiveXObject("Microsoft.XMLHTTP")
 						}
+						catch (e){}
+					}
 				}
 				else
-						return false
+					return false
 				page_request.onreadystatechange=function(){
-						loadpage(page_request, containerid)
+					loadpage(page_request, containerid)
 				}
 				if (bustcachevar) //if bust caching of external page
-						bustcacheparameter=(url.indexOf("?")!=-1)? "&"+new Date().getTime() : "?"+new Date().getTime()
-						page_request.open('GET', url+bustcacheparameter, true)
-						page_request.send(null)
-				}
+					bustcacheparameter=(url.indexOf("?")!=-1)? "&"+new Date().getTime() : "?"+new Date().getTime()
+				page_request.open('GET', url+bustcacheparameter, true)
+				page_request.send(null)
+			}
 
-				function loadpage(page_request, containerid){
-						if (page_request.readyState == 4 && (page_request.status==200 || window.location.href.indexOf("http")==-1))
-								document.getElementById(containerid).innerHTML=page_request.responseText
-				}
+			function loadpage(page_request, containerid){
+				if (page_request.readyState == 4 && (page_request.status==200 || window.location.href.indexOf("http")==-1))
+					document.getElementById(containerid).innerHTML=page_request.responseText
+			}
 
-				function loadobjs(){
+			function loadobjs(){
 				if (!document.getElementById)
-						return
+					return
 
-						for (i=0; i<arguments.length; i++){
-								var file=arguments[i]
-								var fileref=""
+				for (i=0; i<arguments.length; i++){
+					var file=arguments[i]
+					var fileref=""
 								if (loadedobjects.indexOf(file)==-1){ //Check to see if this object has not already been added to page before proceeding
 										if (file.indexOf(".js")!=-1){ //If object is a js file
-												fileref=document.createElement('script')
-												fileref.setAttribute("type","text/javascript");
-												fileref.setAttribute("src", file);
+											fileref=document.createElement('script')
+											fileref.setAttribute("type","text/javascript");
+											fileref.setAttribute("src", file);
 										}
 										else if (file.indexOf(".css")!=-1){ //If object is a css file
-												fileref=document.createElement("link")
-												fileref.setAttribute("rel", "stylesheet");
-												fileref.setAttribute("type", "text/css");
-												fileref.setAttribute("href", file);
+											fileref=document.createElement("link")
+											fileref.setAttribute("rel", "stylesheet");
+											fileref.setAttribute("type", "text/css");
+											fileref.setAttribute("href", file);
 										}
-								}
-								if (fileref!=""){
+									}
+									if (fileref!=""){
 										document.getElementsByTagName("head").item(0).appendChild(fileref)
 										loadedobjects+=file+" " //Remember this object as being already added to page
+									}
 								}
-						}
-				}
+							}
 
-		</script>
+							</script>
 
-    </head>
-    <body>
+						</head>
+						<body>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+            <![endif]-->
 
-        <!-- Add your site or application content here -->
+            <!-- Add your site or application content here -->
 
-		<div data-role="page">
-			<div data-role="header">
-				<h1>Medical Viewer</h1>
-			</div>
+            <div data-role="page">
+            	<div data-role="header">
+            		<h1>Medical Viewer</h1>
+            	</div>
 
 			<!--
 			Content varies based on whether the orientation is in portrait or landscape mode.
-			-->
+		-->
 
-			<div data-role="content">
-					<div class="content-secondary" id="patient-list">
-						<ul data-role="listview" data-inset="true" data-filter="true">
-								<li><a href="javascript:ajaxpage('patient_pages/patient1.html', 'patient-info');">Patient 1</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient2.html', 'patient-info');">Patient 2</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient3.html', 'patient-info');">Patient 3</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient4.html', 'patient-info');">Patient 4</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient5.html', 'patient-info');">Patient 5</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient6.html', 'patient-info');">Patient 6</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient7.html', 'patient-info');">Patient 7</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient8.html', 'patient-info');">Patient 8</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient9.html', 'patient-info');">Patient 9</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient11.html', 'patient-info');">Patient 11</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient12.html', 'patient-info');">Patient 12</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient13.html', 'patient-info');">Patient 13</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient14.html', 'patient-info');">Patient 14</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient15.html', 'patient-info');">Patient 15</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient16.html', 'patient-info');">Patient 16</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient17.html', 'patient-info');">Patient 17</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient18.html', 'patient-info');">Patient 18</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient19.html', 'patient-info');">Patient 19</a></li>
-								<li><a href="javascript:ajaxpage('patient_pages/patient19.html', 'patient-info');">Patient 19</a></li>
-						</ul>
-					</div>
+		<div data-role="content">
+			<div class="content-secondary" id="patient-list">
+				<ul data-role="listview" data-inset="true" data-filter="true">
+					<li><a href="javascript:ajaxpage('patient_pages/patient1.html', 'patient-info');">Patient 1</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient2.html', 'patient-info');">Patient 2</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient3.html', 'patient-info');">Patient 3</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient4.html', 'patient-info');">Patient 4</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient5.html', 'patient-info');">Patient 5</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient6.html', 'patient-info');">Patient 6</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient7.html', 'patient-info');">Patient 7</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient8.html', 'patient-info');">Patient 8</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient9.html', 'patient-info');">Patient 9</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient11.html', 'patient-info');">Patient 11</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient12.html', 'patient-info');">Patient 12</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient13.html', 'patient-info');">Patient 13</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient14.html', 'patient-info');">Patient 14</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient15.html', 'patient-info');">Patient 15</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient16.html', 'patient-info');">Patient 16</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient17.html', 'patient-info');">Patient 17</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient18.html', 'patient-info');">Patient 18</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient19.html', 'patient-info');">Patient 19</a></li>
+					<li><a href="javascript:ajaxpage('patient_pages/patient19.html', 'patient-info');">Patient 19</a></li>
+				</ul>
+			</div>
 
-					<div class="content-primary" id="patient-info">
-						<p> Name: Doc 1 </p>
-						<p> Age: 7 </p>
-						<p> Gender: M </p>
-						<p> Blood Type: AB+ </p>
-					</div>
+			<div class="content-primary" id="patient-info">
+				<p> Name: Doc 1 </p>
+				<p> Age: 7 </p>
+				<p> Gender: M </p>
+				<p> Blood Type: AB+ </p>
 			</div>
 		</div>
-    </body>
+	</div>
+</body>
 </html>
