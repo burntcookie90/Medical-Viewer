@@ -35,7 +35,8 @@ body {
 }
 
 ::selection {
-    background: #b3d4fc;
+    /*background: #b3d4fc;*/
+	background: #ff0000;
     text-shadow: none;
 }
 
