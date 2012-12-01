@@ -1,9 +1,4 @@
 <body>
-
-	<!-- INCLUDING JQPLOT LIBRARY -->
-	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="../jqplot/jquery.min.js"></script>
-	<script language="javascript" type="text/javascript" src="../jqplot/jquery.jqplot.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="../jqplot/jquery.jqplot.css" />
 
 	<!-- CONTENT -->
@@ -11,14 +6,19 @@
 		<img src="img/patient_image.jpg"/>
 		<p>This is patient 1</p>
 		<p>Test yah</p>
-		<div id="chartdiv" style="height:400px;width:300px; "></div> 
+		<div id="chartdiv" style="height:400px;width:600px; "></div>
 	</div>
 
 	<!-- JQPLOT -->
+	<script type="text/javascript" src="grapher.js"/>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$.jqplot('chartdiv',  [[[1, 2],[3,5.12],[5,13.1],[7,33.6],[9,85.9],[11,219.9]]]);
-		}
+		$(document).ready(function(){
+			var cosPoints = []; 
+			for (var i=0; i<2*Math.PI; i+=0.1){ 
+				cosPoints.push([i, Math.cos(i)]); 
+			} 
+			plot(cosPoints);
+		});
 	</script>
 </body>
 
