@@ -1,7 +1,8 @@
 function plot(points){
 	document.write( '<script language="javascript" src="../jqplot/jquery.min.js" />' );
 	document.write( '<script language="javascript" src="../jqplot/jquery.jqplot.min.js" />' );
-	var plot3 = $.jqplot('chartdiv', [points], {  
+	alert("LOL");
+	/*var plot3 = $.jqplot('chartdiv', [points], {  
 		series:[{showMarker:false}],
 		axes:{
 			xaxis:{
@@ -21,5 +22,5 @@ function plot(points){
 				}
 			}
 		}
-	});
+	});*/
 }
