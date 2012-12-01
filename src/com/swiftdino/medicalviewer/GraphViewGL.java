@@ -1,5 +1,12 @@
 package com.swiftdino.medicalviewer;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.PointF;
@@ -255,5 +262,49 @@ public class GraphViewGL extends GLSurfaceView{
     	dialog.show();
     	
     }
+    
+    public static Object[] loadCSV(int patientID, int fromIndex, int toIndex) {
+		GetDataAsync gda = new GetDataAsync();
+		Object[] args = null;
+		try {
+
+			String JSONString = gda.execute(patientID, fromIndex, toIndex)
+					.get();
+			 Log.d("", "Data Recieved:" + JSONString);
+			JSONObject jsonData = new JSONObject(JSONString);
+
+			JSONArray dataArray = (JSONArray) jsonData.get("documents");
+
+			//int patient_id = dataArray.getJSONObject(0).getInt("patient_id");
+
+			ArrayList<PointF> dataList = new ArrayList<PointF>();
+			float[] rangeMin = new float[] {Float.MIN_VALUE,Float.MAX_VALUE};
+			for (int i = 0; i < dataArray.length(); i++) {
+				float datapoint = dataArray.getJSONObject(i).getInt("data");
+				float time = dataArray.getJSONObject(i).getInt("time") / 240.0f;
+				dataList.add(new PointF(time,datapoint));
+				if(datapoint > rangeMin[0]) rangeMin[0] = datapoint;
+				if(datapoint < rangeMin[1]) rangeMin[1] = datapoint;
+			}
+			
+			rangeMin[0] -= rangeMin[1];
+			args = new Object[] {dataList, 0.0f, rangeMin, 0.0f, 0.0f};
+			//graph = new CGraph(dataList, 0, rangeMin, 0, 0);
+			//Log.d("","Graph Range: " + graph.getRange());
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return args;
+		
+	}
     
 }

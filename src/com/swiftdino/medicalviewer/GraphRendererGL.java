@@ -19,6 +19,8 @@ import android.graphics.PointF;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 public class GraphRendererGL implements GLSurfaceView.Renderer {
@@ -95,7 +97,15 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
 		// create graph data from csv files
 		try {
-			_dataSets = csv2DataSet();
+			//_dataSets = csv2DataSet();
+			Handler mHandler = new Handler(Looper.getMainLooper()); 
+			mHandler.post(new Runnable() {
+				public void run() {
+					Object[] args = GraphViewGL.loadCSV(132,0,999);
+					CGraph graph = new CGraph((ArrayList<PointF>)args[0],(Integer)args[1],(float[])args[2],(Float)args[3],(Float)args[4]);
+					_dataSets = new CGraph[] {graph};
+		        }
+		    });
 		} catch (Exception e) {
 			Log.d(TAG, e.toString());
 		}
@@ -146,6 +156,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 			int i = 0;
 			for (CGraph g : _dataSets) {
 				g.draw(mMVPMatrix, _colors[i++]);
+				Log.d("","drawn");
 			}
 		}
 
@@ -167,8 +178,13 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 			cOrientation = ORIENTATION_PORTRAIT;
 
 		if (!_initialized) {
-			zoomAll(width, height);
-			_initialized = true;
+			try{
+				zoomAll(width, height);
+				_initialized = true;
+			}
+			catch(NullPointerException e) {
+				
+			}
 		}
 
 		// set current screen dimensions
@@ -333,8 +349,9 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
 	}
 
-	private void loadCSV(int patientID, int fromIndex, int toIndex) {
+	private CGraph loadCSV(int patientID, int fromIndex, int toIndex) {
 		GetDataAsync gda = new GetDataAsync();
+		CGraph graph = null;
 		try {
 
 			String JSONString = gda.execute(patientID, fromIndex, toIndex)
@@ -346,16 +363,19 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
 			int patient_id = dataArray.getJSONObject(0).getInt("patient_id");
 
-			ArrayList<Integer> dataList = new ArrayList<Integer>();
+			ArrayList<PointF> dataList = new ArrayList<PointF>();
+			float[] rangeMin = new float[] {Float.MIN_VALUE,Float.MAX_VALUE};
 			for (int i = 0; i < dataArray.length(); i++) {
-				int datapoint = dataArray.getJSONObject(i).getInt("data");
-				int time = dataArray.getJSONObject(i).getInt("time");
-				dataList.add(datapoint);
+				float datapoint = dataArray.getJSONObject(i).getInt("data");
+				float time = dataArray.getJSONObject(i).getInt("time") / 240.0f;
+				dataList.add(new PointF(time,datapoint));
+				if(datapoint > rangeMin[0]) rangeMin[0] = datapoint;
+				if(datapoint < rangeMin[1]) rangeMin[1] = datapoint;
 			}
-
-			for (int datapts : dataList) {
-				Log.d(TAG, "" + datapts);
-			}
+			
+			rangeMin[0] -= rangeMin[1];
+			
+			graph = new CGraph(dataList, 0, rangeMin, 0, 0);
 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -368,6 +388,8 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 			e.printStackTrace();
 		}
 
+		return graph;
+		
 	}
 
 	// zoom to a single graph
