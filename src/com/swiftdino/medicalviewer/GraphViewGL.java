@@ -28,6 +28,7 @@ public class GraphViewGL extends GLSurfaceView{
 		setPreserveEGLContextOnPause(true);
 		mRenderer = new GraphRendererGL(context, MyColors.BLACK_SOLID);
 		setRenderer(mRenderer);
+		
 		//setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 	}
 	

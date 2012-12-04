@@ -13,7 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 public class DetailViewFragment extends Fragment {
@@ -72,6 +76,36 @@ public class DetailViewFragment extends Fragment {
    	    Log.d(TAG, "Found TextView and Returning View");
 	    return view;
 	    
+    }
+    
+    public void onActivityCreated(Bundle savedInstanceState){
+    	super.onActivityCreated(savedInstanceState);
+    	final RelativeLayout layout=(RelativeLayout)getActivity().findViewById(R.id.RelativeLayout1);
+    	final int NUMBER_OF_GRAPHS = 2;
+    	final int GRAPH_OFFSET = 450;
+    	
+    	for(int i=1; i<=NUMBER_OF_GRAPHS; i++){
+	    	for(int x=0; x<8; x++){
+	    		TextView tx=new TextView(getActivity());
+	    		tx.setText(x*10+"");
+	        	tx.setY(GRAPH_OFFSET*i);
+	        	tx.setX(x*80);
+	        	layout.addView(tx);
+	    	}
+	    	for(int y=0; y<7; y++){
+	    		TextView ty=new TextView(getActivity());
+	    		ty.setText(y*3+"");
+	        	ty.setY(GRAPH_OFFSET*i-(y*50));
+	        	ty.setX(0);
+	        	layout.addView(ty);
+	    	}
+    	}
+    	//LayoutParams params = (LayoutParams)tx.getLayoutParams()
+    	
+    	
+    	//Animation a = AnimationUtils.loadAnimation(getActivity(), R.xml.rotate);
+        ///a.reset();
+        //ty.startAnimation(a);
     }
     
 	public void updateGraph(String content, int position) {
