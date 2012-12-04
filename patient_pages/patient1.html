@@ -1,8 +1,24 @@
-This is patient 1
 <body>
-		<div role="main">
-				Test yah
-				<img src="img/patient_image.jpg"/>
-		</div>
+	<!-- CONTENT -->
+	<div role="main">
+		<img src="img/patient_image.jpg"/>
+		<p>This is patient 1</p>
+		<p>Test yah</p>
+		<div id="chartdiv" style="height:400px;width:600px; "></div>
+	</div>
+
+	<!-- JQPLOT -->
+	<script type="text/javascript" src="grapher.js"/>
+	<!--
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var cosPoints = []; 
+			for (var i=0; i<2*Math.PI; i+=0.1){ 
+				cosPoints.push([i, Math.cos(i)]); 
+			} 
+			alert("FOOBAR");
+			plot(cosPoints);
+		});
+	</script>
 </body>
 
