@@ -2,3 +2,4 @@ senior design.sublime-project
 gen/
 bin/
 senior design.sublime-workspace
+*.swp
