@@ -277,6 +277,10 @@ public class CGraph {
 		return _min;
 	}
 	
+	public float getZero(){
+		return _vOffset;
+	}
+	
 	public float getMax(){
 		return _max;
 	}

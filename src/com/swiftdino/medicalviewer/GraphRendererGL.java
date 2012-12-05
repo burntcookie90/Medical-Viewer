@@ -38,7 +38,7 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
 	// drawn objects
 	private CGraph[] _dataSets;
-	private float[][] _colors = { MyColors.BLUE_SOLID, MyColors.RED_SOLID };
+	private float[][] _colors = { MyColors.BLUE_SOLID, MyColors.RED_SOLID, MyColors.GOLD };
 
 	// ui elements
 	private int cOrientation;
@@ -100,8 +100,8 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 			Log.d(TAG, e.toString());
 		}
 
-		_text = new GLText(gl, ctx.getAssets());
-		_text.load("Roboto-Regular.ttf", 14, 2, 2);
+		//_text = new GLText(gl, ctx.getAssets());
+		//_text.load("Roboto-Regular.ttf", 14, 2, 2);
 
 	}
 
@@ -423,5 +423,13 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 
 		Log.d("", "Calculation Done!");
 	}
-
+	
+	public int getHeight(){
+		return cHeight;
+	}
+	
+	public int getWidth(){
+		return cWidth;
+	}
+	
 }

@@ -151,6 +151,11 @@ public class GraphViewGL extends GLSurfaceView{
             	}
             	
             	dragged = false;
+            	DetailViewFragment.offset = mRenderer.offset;
+            	DetailViewFragment.scale = mRenderer.scale;
+            	DetailViewFragment.sHeight = mRenderer.getHeight();
+            	DetailViewFragment.sWidth = mRenderer.getWidth();
+            	DetailViewFragment.graphs = mRenderer.getSets();
             	
             	break;
             	

@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import com.swiftdino.medicalviewer.dummy.DummyContent;
 
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -29,8 +30,15 @@ public class DetailViewFragment extends Fragment {
     DummyContent.DummyItem mItem;
     Random rand = new Random();
     
+    private TextView[][] tVs;
+    
     private static TextView fpsView;
     public static float fps = 0;
+    public static PointF offset;
+	public static PointF scale;
+	public static CGraph[] graphs = null;
+	public static int sHeight;
+	public static int sWidth;
     private Timer myTimer;
     final Handler myHandler = new Handler();
     
@@ -43,7 +51,7 @@ public class DetailViewFragment extends Fragment {
                 TimerMethod();
             }
 
-        }, 0, 1000);
+        }, 0, 50);
 
     }
     
@@ -54,6 +62,7 @@ public class DetailViewFragment extends Fragment {
     final Runnable myRunnable = new Runnable() {
     	public void run() {
     		fpsView.setText("" + fAcc(fps,2));
+    		updateTextViews();
     	}
     };
     
@@ -84,17 +93,21 @@ public class DetailViewFragment extends Fragment {
     	final int NUMBER_OF_GRAPHS = 2;
     	final int GRAPH_OFFSET = 450;
     	
+    	tVs = new TextView[2][14];
+    	
     	for(int i=1; i<=NUMBER_OF_GRAPHS; i++){
-	    	for(int x=0; x<8; x++){
+	    	for(int x=0; x<11; x++){
 	    		TextView tx=new TextView(getActivity());
-	    		tx.setText(x*10+"");
+	    		tVs[i-1][x] = tx;
+	    		tx.setText("");
 	        	tx.setY(GRAPH_OFFSET*i);
 	        	tx.setX(x*80);
 	        	layout.addView(tx);
 	    	}
-	    	for(int y=0; y<7; y++){
+	    	for(int y=0; y<3; y++){
 	    		TextView ty=new TextView(getActivity());
-	    		ty.setText(y*3+"");
+	    		tVs[i-1][11+y] = ty;
+	    		ty.setText("");
 	        	ty.setY(GRAPH_OFFSET*i-(y*50));
 	        	ty.setX(0);
 	        	layout.addView(ty);
@@ -151,6 +164,42 @@ public class DetailViewFragment extends Fragment {
 	public void onResume(){
 		super.onResume();
 		display.onResume();
+	}
+	
+	private void updateTextViews(){
+		
+		if(graphs != null){
+			
+			for(int i = 0; i < 2; i++){
+				
+				for(int j = 0; j < 11; j++){
+					tVs[i][j].setX(j * scale.x - offset.x - 20.0f);
+					tVs[i][j].setY(sHeight - (graphs[i].getMin() * scale.y - offset.y) + 10);
+					tVs[i][j].setText(j + ".0s");
+					if(tVs[i][j].getX() > ((float)sWidth)*.72f) tVs[i][j].setX(Float.MAX_VALUE);
+				}
+				
+				float[] yVals = new float[] {graphs[i].getMin(),graphs[i].getZero(),graphs[i].getMax()};
+				
+				for(int j = 11; j < 14; j++){
+					tVs[i][j].setX(-80.0f - offset.x);
+					tVs[i][j].setY(sHeight - (yVals[j-11] * scale.y - offset.y) - 18);
+					tVs[i][j].setText(decPrecision((yVals[j-11] - graphs[i].getZero())/graphs[i].getFactor(),2) + "");
+					if(tVs[i][j].getX() > ((float)sWidth)*.72f) tVs[i][j].setX(Float.MAX_VALUE);
+					else if(tVs[i][j].getX() < 0.0f) tVs[i][j].setX(0.0f);
+				}
+				
+				
+			}
+		
+		}
+		
+	}
+	
+	private float decPrecision(float f, int prec) {
+		
+		int temp = (int)(f * Math.pow(10, prec));
+		return (float)(((float)(temp)) / Math.pow(10, prec));
 	}
 	
 }
