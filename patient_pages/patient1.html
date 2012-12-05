@@ -43,12 +43,12 @@
 			var time = [];
 			var ecgPoints = [];
 			$.getJSON('smallsamples.json',function(data){
-				alert(data);
+				// alert(data);
 			});
 
 			$.each(json,function(entryindex, entry){
-				ecgValue1.push(entry['ECG1']);
-				time.push(entry['Time']);
+				ecgValue1.push(entry['ECG1'].);
+				get.push(entry['Time']);
 				alert(entry['Time']);
 				ecgPoints.push(entry['Time'],entry['ECG1']);
 			});
