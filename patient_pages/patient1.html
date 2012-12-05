@@ -36,20 +36,21 @@
  		<script type="text/javascript">
 			$(document).ready(function(){
 			alert("beginning json graph");
-			// var json  = "samples.json";
+			var json  = "smallsamples.json";
 			
 			var ecgValue1 = [];
 			var time = [];
 			var ecgPoints = [];
-			$.getJSON('samples.json',function(data){
+			$.getJSON('smallsamples.json',function(data){
 				alert(data);
 			});
-			// $.each(json,function(entryindex, entry){
-			// 	alert(entry['ECG1']);
-			// 	ecgValue1.push(entry['ECG1']);
-			// 	time.push(entry['Time']);
-			// 	ecgPoints.push(entry['Time'],entry['ECG1']);
-			// })	
+
+			$.each(json,function(entryindex, entry){
+				alert(entry['ECG1']);
+				ecgValue1.push(entry['ECG1']);
+				time.push(entry['Time']);
+				ecgPoints.push(entry['Time'],entry['ECG1']);
+			});
 
 			// var plot3 = $.jqplot('jsondiv',ecgPoints);
 		});
