@@ -51,6 +51,7 @@
 	</div>
 
 	<script type="text/javascript">
+		/*
 		$("#annotationsCanvas").click(function(e) {
 			alert("x" + "y");
 			var x = Math.floor((e.pageX-$("#annotationCanvas").offset().left) / 20);
@@ -58,13 +59,11 @@
 
 			ctx.fillStyle = "rgb(255,255,255)";
 		    	ctx.fillRect(x*20, y*20, 20, 20);
-		}
-		/*	
+		}*/
 		var c = document.getElementById("annotationsCanvas");
 		var ctx = c.getContext("2d");
 		ctx.fillStyle="#FF0000";
-		ctx.fillRect(0,0,50,50);
-		*/
+		ctx.fillRect(100,100,150,150);
 	</script>
 </body>
 
