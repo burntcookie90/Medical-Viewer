@@ -1,35 +1,13 @@
-<script language="javascript" type="text/javascript" src="/jqplot/jquery.min.js"></script>
-<script language="javascript" type="text/javascript" src="/jqplot/jquery.jqplot.min.js"></script>
-<script type="text/javascript" src="/jqplot/plugins/jqplot.json2.min.js"></script>
-<script type="text/javascript" src="/jqplot/plugins/jqplot.cursor.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/jqplot/jquery.jqplot.css" />
+<script language="javascript" type="text/javascript" src="jqplot/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="jqplot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="jqplot/plugins/jqplot.json2.min.js"></script>
+<script type="text/javascript" src="jqplot/plugins/jqplot.cursor.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.css" />
 
  <head>
  	<title>Patient 1</title>
  </head>
  <body>
-<!-- 	<div id="cosdiv">
- 		<script type="text/javascript">
-			alert("Reading the cos points");
-			$(document).ready(function(){
-				var cosPoints = []; 
-				for (var i=0; i<2*Math.PI; i+=0.1){ 
-					cosPoints.push([Math.cos(i),i]); 
-				} 
-				var plot2 = $.jqplot('cosdiv',cosPoints,
-					{
-						title: 'Cos Points',
-						cursor:
-						{
-							show:true,
-							zoom:true,
-							showTooltip:true
-						}
-					});
-			});
-		</script>
- 	</div>
- -->
  	<div id="ecg_graph_div">
  		<script type="text/javascript">
 			$(document).ready(function(){
