@@ -43,15 +43,14 @@
 			var time = [];
 			var ecgPoints = [];
 			$.getJSON('smallsamples.json',function(data){
-				json = data;
+				$.each(data,function(entryindex, entry){
+					ecgValue1.push(entry['ECG1']);
+					time.push(entry['Time']);
+					alert(entry['Time']);
+					ecgPoints.push(entry['Time'],entry['ECG1']);
+				});
 			});
 
-			$.each(json,function(entryindex, entry){
-				ecgValue1.push(entry['ECG1']);
-				time.push(entry['Time']);
-				alert(entry['Time']);
-				ecgPoints.push(entry['Time'],entry['ECG1']);
-			});
 
 			var plot3 = $.jqplot('jsondiv',ecgPoints);
 		});
