@@ -48,7 +48,7 @@
 					// alert(ecgValue1);
 					time.push(entry['Time']);
 					// alert(entry['Time']);
-					ecgPoints.push([time,ecgValue1]);
+					ecgPoints.push([entry['Time'],entry['ECG1']]);
 					alert(ecgPoints);
 				});
 			var plot3 = $.jqplot('jsondiv',[ecgPoints]);
