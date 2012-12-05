@@ -99,7 +99,11 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		} catch (Exception e) {
 			Log.d(TAG, e.toString());
 		}
-
+		
+		DetailViewFragment.offset = offset;
+    	DetailViewFragment.scale = scale;
+    	DetailViewFragment.graphs = _dataSets;
+		
 		//_text = new GLText(gl, ctx.getAssets());
 		//_text.load("Roboto-Regular.ttf", 14, 2, 2);
 
@@ -195,6 +199,9 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		// Matrix.orthoM(mProjMatrix, 0, -1, 1, -1, 1, 1.0f, 100.0f);
 
 		// Log.d("",width + " : " + height);
+		
+    	DetailViewFragment.sHeight = height;
+    	DetailViewFragment.sWidth = width;
 
 	}
 

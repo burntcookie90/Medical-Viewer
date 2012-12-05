@@ -12,13 +12,10 @@ public class MasterListActivity extends FragmentActivity {// implements
 
 	private SearchView mSearchView;
 
-	private static TextView fpsView;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.master_list_fragment);
-		fpsView = (TextView) findViewById(R.id.fpsView);
 
 		// info display container in activity_info_display.xml
 		/*
@@ -27,10 +24,6 @@ public class MasterListActivity extends FragmentActivity {// implements
 		 * .findFragmentById(R.id.item_list)) .setActivateOnItemClick(true); }
 		 */
 
-	}
-
-	public static void setFps(int fps) {
-		fpsView.setText("" + fps);
 	}
 
 	/*

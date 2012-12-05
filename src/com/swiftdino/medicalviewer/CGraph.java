@@ -69,6 +69,9 @@ public class CGraph {
 	// max value (normalized and offset)
 	private float _max;
 	
+	//avg value
+	private float _avg;
+	
 	// multiplier converting actual value to normalized value
 	private float _nFactor;
 	
@@ -141,17 +144,20 @@ public class CGraph {
 		// set pts
 		plotCoords = new float[pts.size()*3];
 		int i = 0;
+		float tot = 0;
 		float max = Float.MIN_VALUE;
 		for(PointF p : pts){
 			plotCoords[i++] = p.x;
 			plotCoords[i++] = p.y*_nFactor + _vOffset;
 			plotCoords[i++] = 0.0f;
 			if(plotCoords[i-2] > max) max = plotCoords[i-2];
+			tot += p.y;
 		}
 		
 		vertexCount = plotCoords.length / currentDim;
 		vertexStride = currentDim * 4; // 4 bytes per vertex
 		
+		_avg = tot/((float)vertexCount);
 		_min = rangeMin[1]*_nFactor + _vOffset;
 		_max = max;
 		_range = rangeMin[0]*_nFactor;
@@ -283,6 +289,14 @@ public class CGraph {
 	
 	public float getMax(){
 		return _max;
+	}
+	
+	public float getAvg(){
+		return _avg;
+	}
+	
+	public float getMid() {
+		return (getMin() + getMax())/2.0f;
 	}
 	
 	public float getFactor(){

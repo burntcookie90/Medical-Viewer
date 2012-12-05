@@ -31,6 +31,7 @@ public class DetailViewFragment extends Fragment {
     Random rand = new Random();
     
     private TextView[][] tVs;
+    private TextView[] summaries;
     
     private static TextView fpsView;
     public static float fps = 0;
@@ -61,7 +62,7 @@ public class DetailViewFragment extends Fragment {
     
     final Runnable myRunnable = new Runnable() {
     	public void run() {
-    		fpsView.setText("" + fAcc(fps,2));
+    		fpsView.setText(""); //+ fAcc(fps,2));
     		updateTextViews();
     	}
     };
@@ -93,7 +94,8 @@ public class DetailViewFragment extends Fragment {
     	final int NUMBER_OF_GRAPHS = 2;
     	final int GRAPH_OFFSET = 450;
     	
-    	tVs = new TextView[2][14];
+    	tVs = new TextView[NUMBER_OF_GRAPHS][14];
+    	summaries = new TextView[NUMBER_OF_GRAPHS];
     	
     	for(int i=1; i<=NUMBER_OF_GRAPHS; i++){
 	    	for(int x=0; x<11; x++){
@@ -112,6 +114,13 @@ public class DetailViewFragment extends Fragment {
 	        	ty.setX(0);
 	        	layout.addView(ty);
 	    	}
+	    	TextView tv = new TextView(getActivity());
+	    	summaries[i-1] = tv;
+	    	tv.setTextSize(50);
+	    	tv.setText("10");
+	    	tv.setY(-500);
+	    	tv.setX(-500);
+	    	layout.addView(tv);
     	}
     	//LayoutParams params = (LayoutParams)tx.getLayoutParams()
     	
@@ -189,9 +198,32 @@ public class DetailViewFragment extends Fragment {
 					else if(tVs[i][j].getX() < 0.0f) tVs[i][j].setX(0.0f);
 				}
 				
+				summaries[i].setX(sWidth * .75f + 25);
+				summaries[i].setY(sHeight - (graphs[i].getMid() * scale.y - offset.y) - 50);
+				summaries[i].setText(decPrecision(graphs[i].getAvg(),2)+"");
 				
 			}
 		
+		}
+		
+		else {
+			
+			for(TextView[] arr : tVs){
+				for(TextView v : arr){
+					v.setText("");
+				}
+			}
+			
+		}
+		
+	}
+	
+	public void clearTextViews(){
+		
+		for(TextView[] arr : tVs){
+			for(TextView v : arr){
+				v.setText("");
+			}
 		}
 		
 	}

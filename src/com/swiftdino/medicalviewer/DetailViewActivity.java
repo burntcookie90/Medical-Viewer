@@ -11,6 +11,8 @@ import android.view.MenuItem;
 public class DetailViewActivity extends FragmentActivity {
 	final String TAG = "DetailViewActivity";
 	
+	private DetailViewFragment dV;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,12 +30,13 @@ public class DetailViewActivity extends FragmentActivity {
 		Log.d(TAG, "Starting detail view fragment");
 		DetailViewFragment detailView = (DetailViewFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_detailview);
+		dV = detailView;
 	
 		// Bundle arguments = new Bundle();
 		// arguments.putString(DetailViewFragment.ARG_ITEM_ID,
 		// getIntent().getStringExtra(DetailViewFragment.ARG_ITEM_ID));
 		// detailView.setArguments(arguments);
-	
+		
 		Log.d(TAG, "Updating detail view fragment");
 		try{
 			detailView.updateGraph(content,0);
@@ -42,7 +45,6 @@ public class DetailViewActivity extends FragmentActivity {
 		}
 
 	}
-	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -54,7 +56,7 @@ public class DetailViewActivity extends FragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 }
 
 	
