@@ -18,7 +18,7 @@
 			var ecgValue1 = [];
 			var time = [];
 			var ecgPoints = [];
-			$.getJSON('samples.json',function(data){
+			$.getJSON('patient_pages/samples.json',function(data){
 				$.each(data,function(entryindex, entry){
 					ecgValue1.push(entry['ECG1']);
 					// alert(ecgValue1);
