@@ -26,11 +26,9 @@
 							showTooltip:true
 						}
 					});
-				$('.button-reset').click(function() { plot2.resetZoom() });
 			});
 		</script>
  	</div>
- 	<button class="button-reset">Reset Zoom</button>
  -->
  	<div id="jsondiv">
  		<script type="text/javascript">
@@ -49,13 +47,23 @@
 					time.push(entry['Time']);
 					// alert(entry['Time']);
 					ecgPoints.push([entry['Time'],entry['ECG1']]);
-					alert(ecgPoints);
+					// alert(ecgPoints);
 				});
-			var plot3 = $.jqplot('jsondiv',[ecgPoints]);
+			var plot3 = $.jqplot('jsondiv',[ecgPoints], 
+				{
+					title: "ECG",
+					cursor: {
+						show: true,
+						zoom: true,
+						showTooltip:true
+					}
+				});
+				$('.button-reset').click(function() { plot2.resetZoom() });
 			});
 
 
 		});
  		</script>
  	</div>
+ 	<button class="button-reset">Reset Zoom</button>
  </body>
