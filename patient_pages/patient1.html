@@ -8,7 +8,7 @@
 	</div>
 
 	<!-- JQPLOT -->
-	<script type="text/javascript" src="grapher.js"/>
+<!-- 	<script type="text/javascript" src="grapher.js"/>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var cosPoints = []; 
@@ -17,6 +17,16 @@
 			} 
 			alert("FOOBAR");
 			plot(cosPoints);
+		});
+	</script>
+
+-->
+	<script type="text/javascript" src="../src/plugins/jqplot.canvasTextRenderer.min.js"></script>
+	<script type="text/javascript" src="../src/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			  var plot1 = $.jqplot ('chart1', [[3,7,9,1,4,6,8,2,5]]);
 		});
 	</script>
 </body>
