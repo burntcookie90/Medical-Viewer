@@ -30,7 +30,7 @@
 		</script>
  	</div>
  -->
- 	<div id="jsondiv">
+ 	<div id="ecg_graph_div">
  		<script type="text/javascript">
 			$(document).ready(function(){
 			alert("beginning json graph");
@@ -49,7 +49,7 @@
 					ecgPoints.push([entry['Time'],entry['ECG1']]);
 					// alert(ecgPoints);
 				});
-			var plot3 = $.jqplot('jsondiv',[ecgPoints], 
+			var plot3 = $.jqplot('ecg_graph_div',[ecgPoints], 
 				{
 					title: "ECG",
 					cursor: {
@@ -58,7 +58,7 @@
 						showTooltip:true
 					}
 				});
-				$('.button-reset').click(function() { plot2.resetZoom() });
+				$('.button-reset').click(function() { plot3.resetZoom() });
 			});
 
 
