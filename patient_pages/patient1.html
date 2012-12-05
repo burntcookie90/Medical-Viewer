@@ -51,10 +51,10 @@
 			});
 
 			$.each(json,function(entryindex, entry){
-				alert(entry['ECG1']);
+				alert(entry['Label']);
 				ecgValue1.push(entry['ECG1']);
 				time.push(entry['Time']);
-				alert(entry['Time']);
+				alert(entry['Value']);
 				ecgPoints.push(entry['Time'],entry['ECG1']);
 			});
 
