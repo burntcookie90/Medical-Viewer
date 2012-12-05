@@ -45,13 +45,13 @@
 			$.getJSON('smallsamples.json',function(data){
 				$.each(data,function(entryindex, entry){
 					ecgValue1.push(entry['ECG1']);
-					alert(ecgValue1);
-					// time.push(entry['Time']);
+					// alert(ecgValue1);
+					time.push(entry['Time']);
 					// alert(entry['Time']);
 					// ecgPoints.push([entry['ECG1'],entry['Time']]);
 					// alert(ecgPoints);
 				});
-			var plot3 = $.jqplot('jsondiv',[ecgValue1]);
+			var plot3 = $.jqplot('jsondiv',[ecgValue1,time]);
 			});
 
 
