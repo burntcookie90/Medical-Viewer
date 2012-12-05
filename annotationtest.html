@@ -1,0 +1,64 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/layout-tablet.css">
+	<script language="javascript" type="text/javascript" src="jqplot/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript" src="jqplot/jquery.jqplot.min.js"></script>
+	<script type="text/javascript" src="jqplot/plugins/jqplot.json2.min.js"></script>
+	<script type="text/javascript" src="jqplot/plugins/jqplot.cursor.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="jqplot/jquery.jqplot.css" />
+
+</head>
+
+<body>
+
+	<div id="canvas-wrap">
+		<canvas id="annotationsCanvas" width="800" height="600"></canvas>
+
+		<div id="overlay">
+                <script type="text/javascript">
+                        $(document).ready(function(){
+                        var json  = []
+
+                        
+                        var ecgValue1 = [];
+                        var time = [];
+                        var ecgPoints = [];
+                        $.getJSON('patient_pages/samples.json',function(data){
+                                $.each(data,function(entryindex, entry){
+                                        ecgValue1.push(entry['ECG1']);
+                                        // alert(ecgValue1);
+                                        time.push(entry['Time']);
+                                        // alert(entry['Time']);
+                                        ecgPoints.push([entry['Time'],entry['ECG1']]);
+                                        // alert(ecgPoints);
+                                });
+                        var plot3 = $.jqplot('ecg_graph_div',[ecgPoints], 
+                                {
+                                        title: "ECG",
+                                        cursor: {
+                                                show: true,
+                                                zoom: true,
+                                                showTooltip:true
+                                        }
+                                });
+                                $('.button-reset').click(function() { plot3.resetZoom() });
+                        });
+
+
+                });
+                </script>
+        </div>
+
+
+	</div>
+
+	<script>
+		var c = document.getElementById("annotationsCanvas");
+		var ctx = c.getContext("2d");
+		ctx.fillStyle="#FF0000";
+		ctx.fillRect(0,0,10,10);
+
+	</script>
+</body>
+
+</html>

@@ -377,6 +377,14 @@ dd h4 { margin:15px 0 0 0; }
 	.type-interior .ui-content {
 		background-position: 34%;
 	}
+	#canvas-wrap {
+		position:relative;
+	}
+	#overlay {
+		position:absolute;
+		top:20px;
+		left:30px;
+	}
 }
 /*
 @media all and (min-width: 1200px){
