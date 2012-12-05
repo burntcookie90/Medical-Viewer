@@ -36,7 +36,12 @@
  		<script type="text/javascript">
 			$(document).ready(function(){
 			alert("beginning json graph");
-			var json  = "smallsamples.json";
+			// var json  = "smallsamples.json";
+			var json = [
+        {"Label": "be", "Value": 5}
+        ,{"Label": "ga", "Value": 3}
+        ,{"Label": "ma", "Value": 8}
+        ,{"Label": "ja", "Value": 8}];
 			
 			var ecgValue1 = [];
 			var time = [];
@@ -49,6 +54,7 @@
 				alert(entry['ECG1']);
 				ecgValue1.push(entry['ECG1']);
 				time.push(entry['Time']);
+				alert(entry['Time']);
 				ecgPoints.push(entry['Time'],entry['ECG1']);
 			});
 
