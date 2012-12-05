@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import com.swiftdino.medicalviewer.dummy.DummyContent;
 
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,8 @@ public class DetailViewFragment extends Fragment {
 	public static int sWidth;
     private Timer myTimer;
     final Handler myHandler = new Handler();
+    
+    private int[] col = new int[] {Color.BLUE, Color.RED};
     
     public DetailViewFragment()
     {
@@ -121,7 +124,8 @@ public class DetailViewFragment extends Fragment {
 	    	tv.setY(-500);
 	    	tv.setX(-500);
 	    	layout.addView(tv);
-    	}
+	    	tv.setTextColor(col[i-1]);
+    	};
     	//LayoutParams params = (LayoutParams)tx.getLayoutParams()
     	
     	
