@@ -22,30 +22,46 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+/**
+ * Fragment displaying graph data
+ * @author SwiftDino
+ *
+ */
 public class DetailViewFragment extends Fragment {
-
+	
 	final String TAG = "DetailViewFragment";
     public static final String ARG_ITEM_ID = "item_id";
+    
+    // associated view
     private View _view;
+    
+    // OpenGL SurfaceView
     private GraphViewGL display;
+    
     DummyContent.DummyItem mItem;
     Random rand = new Random();
     
+    // TextViews
     private TextView[][] tVs;
     private TextView[] summaries;
-    
     private static TextView fpsView;
+    
     public static float fps = 0;
     public static PointF offset;
 	public static PointF scale;
 	public static CGraph[] graphs = null;
 	public static int sHeight;
 	public static int sWidth;
-    private Timer myTimer;
+    
+	// timer
+	private Timer myTimer;
     final Handler myHandler = new Handler();
     
     private int[] col = new int[] {Color.BLUE, Color.RED};
     
+    /**
+     * Create a new fragment
+     */
     public DetailViewFragment()
     {
     	myTimer = new Timer();
@@ -59,10 +75,12 @@ public class DetailViewFragment extends Fragment {
 
     }
     
+    // run in main thread
     private void TimerMethod(){
     	myHandler.post(myRunnable);
     }
     
+    // update textviews
     final Runnable myRunnable = new Runnable() {
     	public void run() {
     		fpsView.setText(""); //+ fAcc(fps,2));
@@ -70,12 +88,19 @@ public class DetailViewFragment extends Fragment {
     	}
     };
     
+    /**
+     * round float to 'acc' decimal points 
+     * @param orig original float
+     * @param acc decimal points wanted
+     * @return new float rounded to 'acc' decimal points
+     */
     private float fAcc(float orig, int acc){
     	float temp = (float)(orig * Math.pow(10, acc));
     	float fixed = (int)temp;
     	return (float)(fixed/Math.pow(10, acc));
     }
     
+    // when view is first created
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	setRetainInstance(true);
     	Log.d(TAG, "Creating view from detail_view_content. Finding TextView.");
@@ -91,6 +116,7 @@ public class DetailViewFragment extends Fragment {
 	    
     }
     
+    // when activity is first created
     public void onActivityCreated(Bundle savedInstanceState){
     	super.onActivityCreated(savedInstanceState);
     	final RelativeLayout layout=(RelativeLayout)getActivity().findViewById(R.id.RelativeLayout1);
@@ -134,6 +160,7 @@ public class DetailViewFragment extends Fragment {
         //ty.startAnimation(a);
     }
     
+    // update clicked graphs
 	public void updateGraph(String content, int position) {
 	    if (display != null) {
 	    	// zoom to the graph at index - position%2
@@ -160,7 +187,7 @@ public class DetailViewFragment extends Fragment {
 	    	display = (GraphViewGL) _view.findViewById(R.id.graphViewGL1);
 	    }
 	}
-
+	
 	public void updateGraph(String content, int position, ListView l){
 		updateGraph(content, position);
 		//Patient p = (Patient)l.getItemAtPosition(position);
@@ -179,6 +206,7 @@ public class DetailViewFragment extends Fragment {
 		display.onResume();
 	}
 	
+	// move textviews based on opengl renderers offset and scale
 	private void updateTextViews(){
 		
 		if(graphs != null){

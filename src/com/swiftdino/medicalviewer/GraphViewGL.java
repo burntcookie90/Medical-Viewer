@@ -12,6 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * OpenGL Surface View
+ * @author SwiftDino
+ *
+ */
 public class GraphViewGL extends GLSurfaceView{
 	
 	// opengl renderer
@@ -178,6 +183,7 @@ public class GraphViewGL extends GLSurfaceView{
     	
     }
 	
+    // testing
     public void doStuff(){
     	mRenderer.testStuff();
     }

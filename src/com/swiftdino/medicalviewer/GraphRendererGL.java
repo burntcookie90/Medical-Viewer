@@ -21,8 +21,13 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+/**
+ * OpenGL renderer
+ * @author SwiftDino
+ * 
+ */
 public class GraphRendererGL implements GLSurfaceView.Renderer {
-
+	
 	private static final String TAG = "MyGLRenderer";
 
 	// context passed down from the view
@@ -65,14 +70,14 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 	public volatile PointF offset;
 	public volatile PointF scale;
 
-	// spacing between graphs and from edge of screen (percentage of graph size
-	// where 1 = 100%)
+	/** 
+	* spacing between graphs and from edge of screen (percentage of graph size
+	* where 1 = 100%) 
+	*/
 	private float _uiBuffer = 0.4f;
 
 	// current screen width and height
 	private int cWidth, cHeight;
-
-	private GLText _text;
 
 	public GraphRendererGL(Context context, float[] bgColor) {
 		super();
@@ -339,7 +344,8 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		return _dataSets;
 
 	}
-
+	
+	// load in data from Database
 	private void loadCSV(int patientID, int fromIndex, int toIndex) {
 		GetDataAsync gda = new GetDataAsync();
 		try {
@@ -413,7 +419,8 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 	public CGraph[] getSets() {
 		return _dataSets;
 	}
-
+	
+	// return current framerate
 	public static float getFps() {
 		return fps;
 	}
@@ -431,10 +438,12 @@ public class GraphRendererGL implements GLSurfaceView.Renderer {
 		Log.d("", "Calculation Done!");
 	}
 	
+	// return height of current opengl render space
 	public int getHeight(){
 		return cHeight;
 	}
 	
+	// rreturn width of current opengl render space
 	public int getWidth(){
 		return cWidth;
 	}

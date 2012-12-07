@@ -1,5 +1,10 @@
 package com.swiftdino.medicalviewer;
 
+/**
+ * Static color values for OpenGL
+ * @author SwiftDino
+ *
+ */
 public class MyColors {
 
 	// reds

@@ -1,5 +1,10 @@
 package com.swiftdino.medicalviewer;
 
+/**
+ * Represents a patient
+ * @author SwiftDino
+ *
+ */
 public class Patient {
 	private String name = "";
 

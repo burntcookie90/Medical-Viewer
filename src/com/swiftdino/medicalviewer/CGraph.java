@@ -10,6 +10,11 @@ import android.graphics.PointF;
 import android.opengl.GLES20;
 import android.util.Log;
 
+/**
+ * Class holding graph data 
+ * @author SwiftDino
+ *
+ */
 public class CGraph {
 
 	// shader codes
@@ -77,7 +82,10 @@ public class CGraph {
 	
 	// y value offset based on index in _dataSet array
 	private float _vOffset;
-
+	
+	/**
+	 * create a new graph with auto-generated dummy data
+	 */
 	public CGraph() {
 		
 		Random rand = new Random();
@@ -224,6 +232,11 @@ public class CGraph {
 		
 	}
 	
+	/**
+	 * draws the graph using the model view projection matrix mvpMatrix and with color color
+	 * @param mvpMatrix model view projection matrix
+	 * @param color color to draw graph in
+	 */
 	public void draw(float[] mvpMatrix, float[] color) {
 
 		// draw associated grids etc
@@ -303,25 +316,38 @@ public class CGraph {
 		return _nFactor;
 	}
 	
+	// round float to nearest int
 	private int round(float num){
 		if(num - (int)num < .5f) return (int)(num);
 		else return (int)(num + 1);
 	}
 	
+	// rounds float by ceiling
 	private int roundUp(float num){
 		if(num - (int)num > .000001f) return (int)(num + 1);
 		else return (int) num;
 	}
 	
+	/**
+	 * Adds an annotation to the graph
+	 * @param a annotation
+	 */
 	public void addAnnotation(Annotation a){
 		_annotations.add(a);
 		Log.d("","Annotation added: " + a.get_content());
 	}
 	
+	// return list of all annotations associated with the graph
 	public ArrayList<Annotation> getAnnotations(){
 		return _annotations;
 	}
 	
+	/**
+	 * attempts to find the annotation at location (time,yVal), returns null if none found
+	 * @param time time value
+	 * @param yVal data value
+	 * @return annotation at (time,yVal) or null if none found
+	 */
 	public Annotation getAnnotation(float time, float yVal){
 		Annotation found = null; 
 		for(Annotation a : _annotations){

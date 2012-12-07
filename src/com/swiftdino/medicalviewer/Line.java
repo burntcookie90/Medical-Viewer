@@ -6,6 +6,11 @@ import java.nio.FloatBuffer;
 
 import android.opengl.GLES20;
 
+/**
+ * drawn openGL line
+ * @author SwiftDino
+ *
+ */
 public class Line {
 
 	// shader codes
@@ -43,7 +48,11 @@ public class Line {
 	// number of points and bytes per point
 	private final int vertexCount;
 	private final int vertexStride;
-
+	
+	/**
+	 * new line
+	 * @param coords endpoints of line {x1,y1,z1,x1,y2,z2}
+	 */
 	public Line(float[] coords) {
 
 		plotCoords = coords;
@@ -80,7 +89,12 @@ public class Line {
 		GLES20.glLinkProgram(mProgram); // create OpenGL program executables
 
 	}
-
+	
+	/**
+	 * draw line with model view projection matrix and color
+	 * @param mvpMatrix model view projection matrix
+	 * @param color color to draw in
+	 */
 	public void draw(float[] mvpMatrix, float[] color) {
 
 		// Add program to OpenGL environment

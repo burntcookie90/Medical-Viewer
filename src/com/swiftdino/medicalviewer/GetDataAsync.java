@@ -16,6 +16,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * Retrieve data from DB Asynchronously
+ * @author SwiftDino
+ *
+ */
 public class GetDataAsync extends AsyncTask<Integer, Integer, String> {
 	private String TAG = "GetDataAsync";
 

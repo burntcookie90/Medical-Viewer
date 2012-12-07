@@ -9,6 +9,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+/**
+ * Activity handling the search function of the textview
+ * @author SwiftDino
+ *
+ */
 public class SearchableActivity extends ListActivity {
 	private final String TAG = "SearchableActivity";
 
@@ -24,7 +29,7 @@ public class SearchableActivity extends ListActivity {
 		handleIntent(intent);
 
 	}
-
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			NavUtils.navigateUpTo(this, new Intent(this,
@@ -34,7 +39,7 @@ public class SearchableActivity extends ListActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);

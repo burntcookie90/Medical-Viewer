@@ -7,6 +7,11 @@ import java.nio.ShortBuffer;
 
 import android.opengl.GLES20;
 
+/**
+ * Drawable OpenGL rectangle
+ * @author SwiftDino
+ *
+ */
 public class Rectangle {
 
 	private final String vertexShaderCode =
@@ -46,7 +51,12 @@ public class Rectangle {
 		setVerts(verts);
 		
 	}
-
+	
+	/**
+	 * Draws the rectangle with the model view projection matrix and color specified
+	 * @param mvpMatrix model view projection matrix
+	 * @param color color to draw in
+	 */
 	public void draw(float[] mvpMatrix, float[] color) {
 		// Add program to OpenGL environment
 		GLES20.glUseProgram(mProgram);

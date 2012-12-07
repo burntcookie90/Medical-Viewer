@@ -8,10 +8,16 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
+/**
+ * Activity controlling the display of graph info
+ * @author GTballa
+ *
+ */
 public class DetailViewActivity extends FragmentActivity {
 	final String TAG = "DetailViewActivity";
 	
-	private DetailViewFragment dV;
+	// associated fragment
+	DetailViewFragment dV;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

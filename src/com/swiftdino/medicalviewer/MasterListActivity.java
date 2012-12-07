@@ -5,6 +5,11 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+/**
+ * Activity handling patient list
+ * @author SwiftDino
+ *
+ */
 public class MasterListActivity extends FragmentActivity {// implements
 	// MasterListFragment.OnListItemSelectedListener {
 

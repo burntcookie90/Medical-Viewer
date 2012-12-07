@@ -30,8 +30,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+/**
+ * fragment displaying patient list
+ * @author SwiftDino
+ *
+ */
 public class MasterListFragment extends ListFragment {
-
+	
 	private static final String TAG = "MasterListFragment";
 	// private OnListItemSelectedListener listItemSelectedListener;
 	private StringLoader loader = null;
@@ -64,7 +69,8 @@ public class MasterListFragment extends ListFragment {
 		setHasOptionsMenu(true);
 		return view;
 	}
-
+	
+	// handle clicking of list items
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		
 		// Load the Fragment in an activity if its not present,
@@ -129,7 +135,8 @@ public class MasterListFragment extends ListFragment {
 		this.query = query;
 		loader.onContentChanged();
 	}
-
+	
+	// populate list
 	private void createListData() {
 		for (int i = 0; i < 100; i++) {
 			listData.add(new Patient("Patient " + i));
@@ -147,7 +154,8 @@ public class MasterListFragment extends ListFragment {
 		}
 		return listFilteredData;
 	}// met
-
+	
+	// Dialog to query patient data
 	private void openQueryDialog(final Patient p){
 		
 		float baseTime = 0;
